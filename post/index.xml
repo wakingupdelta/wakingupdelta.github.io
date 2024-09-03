@@ -1,0 +1,359 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>Posts on 想起床的方差</title>
+        <link>https://wakingupdelta.github.io/post/</link>
+        <description>Recent content in Posts on 想起床的方差</description>
+        <generator>Hugo -- gohugo.io</generator>
+        <language>zh-cn</language>
+        <copyright>想起床的方差</copyright>
+        <lastBuildDate>Wed, 26 Jun 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://wakingupdelta.github.io/post/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>completablefuture概览</title>
+        <link>https://wakingupdelta.github.io/p/completablefuture%E6%A6%82%E8%A7%88/</link>
+        <pubDate>Wed, 26 Jun 2024 00:00:00 +0000</pubDate>
+        
+        <guid>https://wakingupdelta.github.io/p/completablefuture%E6%A6%82%E8%A7%88/</guid>
+        <description></description>
+        </item>
+        <item>
+        <title>javaweb概览</title>
+        <link>https://wakingupdelta.github.io/p/javaweb%E6%A6%82%E8%A7%88/</link>
+        <pubDate>Thu, 06 Jun 2024 00:00:00 +0000</pubDate>
+        
+        <guid>https://wakingupdelta.github.io/p/javaweb%E6%A6%82%E8%A7%88/</guid>
+        <description></description>
+        </item>
+        <item>
+        <title>注意力机制概览</title>
+        <link>https://wakingupdelta.github.io/p/%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B6%E6%A6%82%E8%A7%88/</link>
+        <pubDate>Sun, 12 May 2024 00:00:00 +0000</pubDate>
+        
+        <guid>https://wakingupdelta.github.io/p/%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B6%E6%A6%82%E8%A7%88/</guid>
+        <description></description>
+        </item>
+        <item>
+        <title>基于一致性的半监督学习</title>
+        <link>https://wakingupdelta.github.io/p/%E5%9F%BA%E4%BA%8E%E4%B8%80%E8%87%B4%E6%80%A7%E7%9A%84%E5%8D%8A%E7%9B%91%E7%9D%A3%E5%AD%A6%E4%B9%A0/</link>
+        <pubDate>Wed, 01 May 2024 00:00:00 +0000</pubDate>
+        
+        <guid>https://wakingupdelta.github.io/p/%E5%9F%BA%E4%BA%8E%E4%B8%80%E8%87%B4%E6%80%A7%E7%9A%84%E5%8D%8A%E7%9B%91%E7%9D%A3%E5%AD%A6%E4%B9%A0/</guid>
+        <description></description>
+        </item>
+        <item>
+        <title>Pyinstaller打包pytorch代码</title>
+        <link>https://wakingupdelta.github.io/p/pyinstaller%E6%89%93%E5%8C%85pytorch%E4%BB%A3%E7%A0%81/</link>
+        <pubDate>Sun, 28 Apr 2024 00:00:00 +0000</pubDate>
+        
+        <guid>https://wakingupdelta.github.io/p/pyinstaller%E6%89%93%E5%8C%85pytorch%E4%BB%A3%E7%A0%81/</guid>
+        <description>&lt;h1 id=&#34;引言&#34;&gt;引言
+&lt;/h1&gt;&lt;p&gt;第一次尝试用 &lt;strong&gt;Pyinstaller&lt;/strong&gt; 打包 &lt;strong&gt;pytorch&lt;/strong&gt; 代码，碰见了很多问题，也耗费了许多时间！想把这个过程中碰到的问题与解决方法记录一下，方便后来者&lt;/p&gt;
+&lt;h1 id=&#34;一开箱使用&#34;&gt;一、开箱使用
+&lt;/h1&gt;&lt;h2 id=&#34;11-基本流程&#34;&gt;1.1 基本流程
+&lt;/h2&gt;&lt;p&gt;在 &lt;strong&gt;windows&lt;/strong&gt; 平台上，打包 &lt;strong&gt;pytorch&lt;/strong&gt; 代码的基本流程如下：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;环境配置与测试&lt;/li&gt;
+&lt;li&gt;打包与本地调试&lt;/li&gt;
+&lt;li&gt;生产环境部署与测试&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;12-环境配置与测试&#34;&gt;1.2 环境配置与测试
+&lt;/h2&gt;&lt;p&gt;在 &lt;strong&gt;Pycharm&lt;/strong&gt; 打开项目，点击 &lt;strong&gt;Terminal&lt;/strong&gt;，输入命令 &lt;code&gt;pip install pyinstaller&lt;/code&gt;，安装打包框架&lt;strong&gt;Pyinstaller&lt;/strong&gt;，后编写测试文件  &lt;em&gt;&lt;strong&gt;hello.py&lt;/strong&gt;&lt;/em&gt;:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;k&#34;&gt;if&lt;/span&gt;  &lt;span class=&#34;vm&#34;&gt;__name__&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;==&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;__main__&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;nb&#34;&gt;print&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;Hello World!&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;k&#34;&gt;while&lt;/span&gt; &lt;span class=&#34;kc&#34;&gt;True&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;k&#34;&gt;pass&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;需确保 &lt;strong&gt;Terminal&lt;/strong&gt; 路径为项目根目录，执行 &lt;code&gt;pyinstaller -F hello.py&lt;/code&gt; 开始打包！在文件夹 &lt;strong&gt;dist&lt;/strong&gt; 中找到 &lt;strong&gt;hello.exe&lt;/strong&gt; 程序，若运行通过，说明环境配置成功&lt;/p&gt;
+&lt;h2 id=&#34;13-打包与本地调试&#34;&gt;1.3 打包与本地调试
+&lt;/h2&gt;&lt;p&gt;实际的项目一般是多文件，打包过程较复杂，需把握两个核心要素：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;spec文件的配置&lt;/li&gt;
+&lt;li&gt;依赖项补齐&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;131--spec文件的配置&#34;&gt;1.3.1  spec文件的配置
+&lt;/h3&gt;&lt;p&gt;关于.spec文件配置详见参考资料 &lt;a class=&#34;link&#34; href=&#34;https://blog.csdn.net/weixin_41870706/article/details/101780731&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;[1]&lt;/a&gt;，本文不赘述&lt;/p&gt;
+&lt;h3 id=&#34;132--依赖项补齐&#34;&gt;1.3.2  依赖项补齐
+&lt;/h3&gt;&lt;p&gt;在测试阶段，应使用-D模式打包，方便分析缺失的依赖项。运行打包后的程序，常报如下错误：&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://wakingupdelta.github.io/p/pyinstaller%E6%89%93%E5%8C%85pytorch%E4%BB%A3%E7%A0%81/image-20240903141254175.png&#34;
+	width=&#34;1224&#34;
+	height=&#34;95&#34;
+	srcset=&#34;https://wakingupdelta.github.io/p/pyinstaller%E6%89%93%E5%8C%85pytorch%E4%BB%A3%E7%A0%81/image-20240903141254175_hua214236ce2a721fda59fdbd749f9c0f6_137563_480x0_resize_box_3.png 480w, https://wakingupdelta.github.io/p/pyinstaller%E6%89%93%E5%8C%85pytorch%E4%BB%A3%E7%A0%81/image-20240903141254175_hua214236ce2a721fda59fdbd749f9c0f6_137563_1024x0_resize_box_3.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;image-20240903141254175&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;1288&#34;
+		data-flex-basis=&#34;3092px&#34;
+	
+&gt;以上的输出信息表明缺少 &lt;strong&gt;caffe2_nvrtc.dll&lt;/strong&gt; 或对应的 &lt;strong&gt;依赖项&lt;/strong&gt;，补齐过程如下:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;判断输出信息路径中 &lt;strong&gt;caffe2_nvrtc.dll&lt;/strong&gt; 是否存在&lt;/li&gt;
+&lt;li&gt;若不存在，直接在 &lt;strong&gt;Anaconda&lt;/strong&gt; 环境搜索 &lt;strong&gt;caffe2_nvrtc.dll&lt;/strong&gt;，粘贴到 &lt;strong&gt;根目录&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;若存在，说明是缺少依赖项，使用 &lt;strong&gt;Dependencies&lt;/strong&gt; 工具分析 &lt;strong&gt;caffe2_nvrtc.dll&lt;/strong&gt; 所需要的依赖项，后补齐到&lt;strong&gt;根目录&lt;/strong&gt;下&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;Dependencies&lt;/strong&gt; 是一个分析依赖项的工具，可在参考资料 &lt;a class=&#34;link&#34; href=&#34;https://github.com/lucasg/Dependencies&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;[2]&lt;/a&gt; 中安装，使用时直接将 &lt;strong&gt;dll文件&lt;/strong&gt; 拖进去。这里以 &lt;em&gt;&lt;strong&gt;torch_python.dll&lt;/strong&gt;&lt;/em&gt; 举例&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://wakingupdelta.github.io/p/pyinstaller%E6%89%93%E5%8C%85pytorch%E4%BB%A3%E7%A0%81/image-20240903141358548.png&#34;
+	width=&#34;1217&#34;
+	height=&#34;767&#34;
+	srcset=&#34;https://wakingupdelta.github.io/p/pyinstaller%E6%89%93%E5%8C%85pytorch%E4%BB%A3%E7%A0%81/image-20240903141358548_hua431770df306b4cdd6865966889f62a4_415390_480x0_resize_box_3.png 480w, https://wakingupdelta.github.io/p/pyinstaller%E6%89%93%E5%8C%85pytorch%E4%BB%A3%E7%A0%81/image-20240903141358548_hua431770df306b4cdd6865966889f62a4_415390_1024x0_resize_box_3.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;image-20240903141358548&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;158&#34;
+		data-flex-basis=&#34;380px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;可以发现，缺少若干个dll文件，补齐即可。重复迭代上述补齐操作，基本可解决dll报错的问题&lt;/p&gt;
+&lt;h2 id=&#34;14-生产环境部署与测试&#34;&gt;1.4 生产环境部署与测试
+&lt;/h2&gt;&lt;p&gt;博主使用的是pytorch的GPU版本，故在生产环境上需配置cuda。建议pytorch程序显式提供cpu推理功能，以便在测试时可排除cuda环境造成的问题。最后，祝大家好运，打包成功那一刻是蛮喜悦的！&lt;/p&gt;
+&lt;h1 id=&#34;参考资料&#34;&gt;参考资料
+&lt;/h1&gt;&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;https://blog.csdn.net/weixin_41870706/article/details/101780731&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;[1] spec文件配置&lt;/a&gt;&lt;br&gt;
+&lt;a class=&#34;link&#34; href=&#34;https://github.com/lucasg/Dependencies&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;[2] Dependencies的安装&lt;/a&gt;&lt;br&gt;
+&lt;a class=&#34;link&#34; href=&#34;https://blog.csdn.net/weixin_41870706/article/details/101780731&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;[3] python项目（非单一.py文件）用Pyinstaller打包发布成exe，在windos上运行程序&lt;/a&gt;&lt;br&gt;
+&lt;a class=&#34;link&#34; href=&#34;https://medium.com/@exexzxzpo/%E5%98%97%E8%A9%A6%E4%BD%BF%E7%94%A8pyinstaller%E6%89%93%E5%8C%85yolov5%E4%B8%ADdetect-py%E6%96%87%E4%BB%B6-%E5%90%ABpytorch%E6%A1%86%E6%9E%B6-%E6%89%80%E9%81%87%E5%88%B0%E7%9A%84%E5%95%8F%E9%A1%8C-543f5481b304&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;[4] 嘗試使用Pyinstaller打包yolov5中detect.py文件(含pytorch框架)所遇到的問題&lt;/a&gt;&lt;br&gt;
+&lt;a class=&#34;link&#34; href=&#34;https://www.bilibili.com/video/BV1bp4y1D7Dg?spm_id_from=333.880.my_history.page.click&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;[5] pyinstaller打包经验分享以及一些错误解决方法&lt;/a&gt;&lt;/p&gt;
+</description>
+        </item>
+        <item>
+        <title>Ubuntu驱动安装，一发入魂</title>
+        <link>https://wakingupdelta.github.io/p/ubuntu%E9%A9%B1%E5%8A%A8%E5%AE%89%E8%A3%85%E4%B8%80%E5%8F%91%E5%85%A5%E9%AD%82/</link>
+        <pubDate>Sun, 28 Apr 2024 00:00:00 +0000</pubDate>
+        
+        <guid>https://wakingupdelta.github.io/p/ubuntu%E9%A9%B1%E5%8A%A8%E5%AE%89%E8%A3%85%E4%B8%80%E5%8F%91%E5%85%A5%E9%AD%82/</guid>
+        <description>&lt;h1 id=&#34;前言&#34;&gt;前言
+&lt;/h1&gt;&lt;p&gt;闲着没事，折腾了个双系统，卡在显卡驱动安装，最后参考官方教程，一发入魂。原版教程是英文版 &lt;a class=&#34;link&#34; href=&#34;https://linuxconfig.org/how-to-install-the-nvidia-drivers-on-ubuntu-18-04-bionic-beaver-linux&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;[1]&lt;/a&gt;，本文将相关内容简单翻译，以方便大家使用。官方共列出三种安装方法，方法一、二为自动安装，方法三为手动安装；推荐使用第一种方法，简单且高效，第三种方法过于复杂，不推荐。这里不得不吐槽下，有很多教程将第二种方法和第三种方法糅合，纯属误人子弟！&lt;/p&gt;
+&lt;h1 id=&#34;方法一基于官方库的自动安装&#34;&gt;方法一：基于官方库的自动安装
+&lt;/h1&gt;&lt;p&gt;&lt;strong&gt;步骤一&lt;/strong&gt;：使用命令 &lt;strong&gt;ubuntu-drivers devices&lt;/strong&gt;，确定显卡型号和推荐的驱动版本，从输出信息可知，目前的显卡型号为GeForce GTX 1060，推荐的驱动版本为390&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; $ ubuntu-drivers devices
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;== /sys/devices/pci0000:00/0000:00:01.0/0000:01:00.0 ==
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;modalias : pci:v000010DEd00001180sv00001458sd0000353Cbc03sc00i00
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;vendor   : NVIDIA Corporation
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;model    : GP106 [GeForce GTX 1060 6GB]
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;driver   : nvidia-304 - distro non-free
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;driver   : nvidia-340 - distro non-free
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;driver   : nvidia-390 - distro non-free recommended
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;driver   : xserver-xorg-video-nouveau - distro free builtin
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;== cpu-microcode.py ==
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;driver   : intel-microcode - distro free
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;&lt;strong&gt;步骤二&lt;/strong&gt;：自动安装第一步所推荐驱动&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;$ sudo ubuntu-drivers autoinstall
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;也可以，手动安装特定版本&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;$ sudo apt install nvidia-340
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;&lt;strong&gt;步骤三&lt;/strong&gt;：等待安装结束，后重启系统，使用命令 &lt;strong&gt;nvidia-smi&lt;/strong&gt; 确认安装是否成功&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;$ nvidia-smi
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h1 id=&#34;方法二基于ppa库的自动安装&#34;&gt;方法二：基于PPA库的自动安装
+&lt;/h1&gt;&lt;p&gt;&lt;strong&gt;步骤一&lt;/strong&gt;：添加PPA库&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;$ sudo add-apt-repository ppa:graphics-drivers/ppa
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;$ sudo apt update
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;&lt;strong&gt;步骤二&lt;/strong&gt;：使用命令 &lt;strong&gt;ubuntu-drivers devices&lt;/strong&gt; 查看推荐的驱动版本，可以发现，当添加PPA库后，推荐驱动版本更改为410，且注明为第三方包&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;9
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;$ ubuntu-drivers devices
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;== /sys/devices/pci0000:00/0000:00:01.0/0000:01:00.0 ==
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;modalias : pci:v000010DEd00001C03sv00001043sd000085ABbc03sc00i00
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;vendor   : NVIDIA Corporation
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;model    : GP106 [GeForce GTX 1060 6GB]
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;driver   : nvidia-driver-390 - third-party free
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;driver   : nvidia-driver-410 - third-party free recommended
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;driver   : nvidia-driver-396 - third-party free
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;driver   : xserver-xorg-video-nouveau - distro free builtin
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;&lt;strong&gt;步骤三&lt;/strong&gt;：自动安装步骤二所推荐驱动&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;$ sudo ubuntu-drivers autoinstall
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;使用命令 &lt;strong&gt;apt&lt;/strong&gt; 安装指定版本驱动&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;$ sudo apt install nvidia-410
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;&lt;strong&gt;步骤四&lt;/strong&gt;：等待安装结束，后重启系统，使用命令 &lt;strong&gt;nvidia-smi&lt;/strong&gt; 确认安装是否成功&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;$ nvidia-smi
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;方法一使用官方ubuntu的软件库，方法二使用PPA库，支持第三方上传的软件包&lt;/p&gt;
+&lt;h1 id=&#34;方法三本地下载驱动的手动安装&#34;&gt;方法三：本地下载驱动的手动安装
+&lt;/h1&gt;&lt;p&gt;&lt;strong&gt;步骤一&lt;/strong&gt;：使用命令 &lt;strong&gt;lshw&lt;/strong&gt; 确定显卡型号，去英伟达官网下载对应版本驱动，保存至home路径下&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;$  lshw -numeric -C display
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;&lt;strong&gt;步骤二&lt;/strong&gt;：配置编译、安装驱动的环境&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;$ sudo dpkg --add-architecture i386
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;$ sudo apt update
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;$ sudo apt install build-essential libc6:i386 libglvnd-dev pkg-config
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;&lt;strong&gt;步骤三&lt;/strong&gt;：禁用默认nouveau显卡驱动，后重启系统&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;$ sudo bash -c &amp;#34;echo blacklist nouveau &amp;gt; /etc/modprobe.d/blacklist-nvidia-nouveau.conf&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;$ sudo bash -c &amp;#34;echo options nouveau modeset=0 &amp;gt;&amp;gt; /etc/modprobe.d/blacklist-nvidia-nouveau.conf&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;&lt;strong&gt;步骤四&lt;/strong&gt;：安装新驱动时，需要停止当前显示功能，使用命令telinit进入运行级别3，搭配快捷键CTRL+ALT+F1登录&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;$ sudo telinit 3
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;&lt;strong&gt;步骤五&lt;/strong&gt;：使用命令bash开始安装&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;$ sudo bash NVIDIA-Linux-x86_64-410.73.bin
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;安装过程中的部分问题回答&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;The distribution-provided pre-install script failed!
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;Are you sure you want to continue? -&amp;gt; CONTINUE INSTALLATION
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;Would you like to run the nvidia-xconfig utility? -&amp;gt; YES 
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;方法三适用不方便联网的场合，安装过程属实复杂。当且仅当在方法三中出现 &lt;strong&gt;禁用默认nouveau驱动&lt;/strong&gt; 的操作，方法一和方法二并不需要。方法二和方法三并没测试过，其安装过程仅供参考!&lt;/p&gt;
+&lt;h1 id=&#34;参考资料&#34;&gt;参考资料
+&lt;/h1&gt;&lt;p&gt;[1] &lt;a class=&#34;link&#34; href=&#34;https://linuxconfig.org/how-to-install-the-nvidia-drivers-on-ubuntu-18-04-bionic-beaver-linux&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Install NVIDIA drivers on Ubuntu 18.04&lt;/a&gt;&lt;/p&gt;
+</description>
+        </item>
+        <item>
+        <title>改造nnUnet，嵌入第三方网络</title>
+        <link>https://wakingupdelta.github.io/p/%E6%94%B9%E9%80%A0nnunet%E5%B5%8C%E5%85%A5%E7%AC%AC%E4%B8%89%E6%96%B9%E7%BD%91%E7%BB%9C/</link>
+        <pubDate>Sun, 28 Apr 2024 00:00:00 +0000</pubDate>
+        
+        <guid>https://wakingupdelta.github.io/p/%E6%94%B9%E9%80%A0nnunet%E5%B5%8C%E5%85%A5%E7%AC%AC%E4%B8%89%E6%96%B9%E7%BD%91%E7%BB%9C/</guid>
+        <description></description>
+        </item>
+        <item>
+        <title>云顶之弈 辅助高亮显示</title>
+        <link>https://wakingupdelta.github.io/p/%E4%BA%91%E9%A1%B6%E4%B9%8B%E5%BC%88-%E8%BE%85%E5%8A%A9%E9%AB%98%E4%BA%AE%E6%98%BE%E7%A4%BA/</link>
+        <pubDate>Sun, 28 Apr 2024 00:00:00 +0000</pubDate>
+        
+        <guid>https://wakingupdelta.github.io/p/%E4%BA%91%E9%A1%B6%E4%B9%8B%E5%BC%88-%E8%BE%85%E5%8A%A9%E9%AB%98%E4%BA%AE%E6%98%BE%E7%A4%BA/</guid>
+        <description></description>
+        </item>
+        
+    </channel>
+</rss>

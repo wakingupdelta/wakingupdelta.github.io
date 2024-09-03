@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="zh-cn" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="前言 闲着没事，折腾了个双系统，卡在显卡驱动安装，最后参考官方教程，一发入魂。原版教程是英文版 [1]，本文将相关内容简单翻译，以方便大家使用。">
+<title>Ubuntu驱动安装，一发入魂</title>
+
+<link rel='canonical' href='https://wakingupdelta.github.io/p/ubuntu%E9%A9%B1%E5%8A%A8%E5%AE%89%E8%A3%85%E4%B8%80%E5%8F%91%E5%85%A5%E9%AD%82/'>
+
+<link rel="stylesheet" href="/scss/style.min.0304c6baf04e01a8fe70693791cb744d56a3578a3120a8796cefc66825aa39c7.css"><meta property='og:title' content="Ubuntu驱动安装，一发入魂">
+<meta property='og:description' content="前言 闲着没事，折腾了个双系统，卡在显卡驱动安装，最后参考官方教程，一发入魂。原版教程是英文版 [1]，本文将相关内容简单翻译，以方便大家使用。">
+<meta property='og:url' content='https://wakingupdelta.github.io/p/ubuntu%E9%A9%B1%E5%8A%A8%E5%AE%89%E8%A3%85%E4%B8%80%E5%8F%91%E5%85%A5%E9%AD%82/'>
+<meta property='og:site_name' content='想起床的方差'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:published_time' content='2024-04-28T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2024-04-28T00:00:00&#43;00:00'/>
+<meta name="twitter:title" content="Ubuntu驱动安装，一发入魂">
+<meta name="twitter:description" content="前言 闲着没事，折腾了个双系统，卡在显卡驱动安装，最后参考官方教程，一发入魂。原版教程是英文版 [1]，本文将相关内容简单翻译，以方便大家使用。">
+    <link rel="shortcut icon" href="/favicon.ico" />
+
+  
+
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "dark");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+            
+            <figure class="site-avatar">
+                <a href="/">
+                
+                    
+                    
+                    
+                        
+                        <img src="/img/avatar_hu002516796a89100b6bac501e69a8f35d_5680_300x0_resize_box_3.png" width="300"
+                            height="300" class="site-logo" loading="lazy" alt="Avatar">
+                    
+                
+                </a>
+                
+            </figure>
+            
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">想起床的方差</a></h1>
+            <h2 class="site-description">要多想，要多想，要多想</h2>
+        </div>
+    </header><ol class="menu-social">
+            
+                <li>
+                    <a 
+                        href='https://juejin.cn/user/1819016667072378'
+                        target="_blank"
+                        title="JueJin"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-brand-juejin"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M2 12l10 7.422l10 -7.422" /><path d="M7 9l5 4l5 -4" /><path d="M11 6l1 .8l1 -.8l-1 -.8z" /></svg>
+                        
+                    </a>
+                </li>
+            
+        </ol><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="5 12 3 12 12 3 21 12 19 12" />
+  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+</svg>
+
+
+
+                
+                <span>主页</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>暗色模式</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/%E5%B7%A5%E5%85%B7/" >
+                工具
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/p/ubuntu%E9%A9%B1%E5%8A%A8%E5%AE%89%E8%A3%85%E4%B8%80%E5%8F%91%E5%85%A5%E9%AD%82/">Ubuntu驱动安装，一发入魂</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">2024-04-28</time>
+            </div>
+        
+
+        
+    </footer>
+    
+
+    
+</div>
+
+</header>
+
+    <section class="article-content">
+    
+    
+    <h1 id="前言">前言
+</h1><p>闲着没事，折腾了个双系统，卡在显卡驱动安装，最后参考官方教程，一发入魂。原版教程是英文版 <a class="link" href="https://linuxconfig.org/how-to-install-the-nvidia-drivers-on-ubuntu-18-04-bionic-beaver-linux"  target="_blank" rel="noopener"
+    >[1]</a>，本文将相关内容简单翻译，以方便大家使用。官方共列出三种安装方法，方法一、二为自动安装，方法三为手动安装；推荐使用第一种方法，简单且高效，第三种方法过于复杂，不推荐。这里不得不吐槽下，有很多教程将第二种方法和第三种方法糅合，纯属误人子弟！</p>
+<h1 id="方法一基于官方库的自动安装">方法一：基于官方库的自动安装
+</h1><p><strong>步骤一</strong>：使用命令 <strong>ubuntu-drivers devices</strong>，确定显卡型号和推荐的驱动版本，从输出信息可知，目前的显卡型号为GeForce GTX 1060，推荐的驱动版本为390</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl"> $ ubuntu-drivers devices
+</span></span><span class="line"><span class="cl">== /sys/devices/pci0000:00/0000:00:01.0/0000:01:00.0 ==
+</span></span><span class="line"><span class="cl">modalias : pci:v000010DEd00001180sv00001458sd0000353Cbc03sc00i00
+</span></span><span class="line"><span class="cl">vendor   : NVIDIA Corporation
+</span></span><span class="line"><span class="cl">model    : GP106 [GeForce GTX 1060 6GB]
+</span></span><span class="line"><span class="cl">driver   : nvidia-304 - distro non-free
+</span></span><span class="line"><span class="cl">driver   : nvidia-340 - distro non-free
+</span></span><span class="line"><span class="cl">driver   : nvidia-390 - distro non-free recommended
+</span></span><span class="line"><span class="cl">driver   : xserver-xorg-video-nouveau - distro free builtin
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">== cpu-microcode.py ==
+</span></span><span class="line"><span class="cl">driver   : intel-microcode - distro free
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><strong>步骤二</strong>：自动安装第一步所推荐驱动</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">$ sudo ubuntu-drivers autoinstall
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>也可以，手动安装特定版本</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">$ sudo apt install nvidia-340
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><strong>步骤三</strong>：等待安装结束，后重启系统，使用命令 <strong>nvidia-smi</strong> 确认安装是否成功</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">$ nvidia-smi
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h1 id="方法二基于ppa库的自动安装">方法二：基于PPA库的自动安装
+</h1><p><strong>步骤一</strong>：添加PPA库</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">$ sudo add-apt-repository ppa:graphics-drivers/ppa
+</span></span><span class="line"><span class="cl">$ sudo apt update
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><strong>步骤二</strong>：使用命令 <strong>ubuntu-drivers devices</strong> 查看推荐的驱动版本，可以发现，当添加PPA库后，推荐驱动版本更改为410，且注明为第三方包</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">$ ubuntu-drivers devices
+</span></span><span class="line"><span class="cl">== /sys/devices/pci0000:00/0000:00:01.0/0000:01:00.0 ==
+</span></span><span class="line"><span class="cl">modalias : pci:v000010DEd00001C03sv00001043sd000085ABbc03sc00i00
+</span></span><span class="line"><span class="cl">vendor   : NVIDIA Corporation
+</span></span><span class="line"><span class="cl">model    : GP106 [GeForce GTX 1060 6GB]
+</span></span><span class="line"><span class="cl">driver   : nvidia-driver-390 - third-party free
+</span></span><span class="line"><span class="cl">driver   : nvidia-driver-410 - third-party free recommended
+</span></span><span class="line"><span class="cl">driver   : nvidia-driver-396 - third-party free
+</span></span><span class="line"><span class="cl">driver   : xserver-xorg-video-nouveau - distro free builtin
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><strong>步骤三</strong>：自动安装步骤二所推荐驱动</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">$ sudo ubuntu-drivers autoinstall
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>使用命令 <strong>apt</strong> 安装指定版本驱动</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">$ sudo apt install nvidia-410
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><strong>步骤四</strong>：等待安装结束，后重启系统，使用命令 <strong>nvidia-smi</strong> 确认安装是否成功</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">$ nvidia-smi
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>方法一使用官方ubuntu的软件库，方法二使用PPA库，支持第三方上传的软件包</p>
+<h1 id="方法三本地下载驱动的手动安装">方法三：本地下载驱动的手动安装
+</h1><p><strong>步骤一</strong>：使用命令 <strong>lshw</strong> 确定显卡型号，去英伟达官网下载对应版本驱动，保存至home路径下</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">$  lshw -numeric -C display
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><strong>步骤二</strong>：配置编译、安装驱动的环境</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">$ sudo dpkg --add-architecture i386
+</span></span><span class="line"><span class="cl">$ sudo apt update
+</span></span><span class="line"><span class="cl">$ sudo apt install build-essential libc6:i386 libglvnd-dev pkg-config
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><strong>步骤三</strong>：禁用默认nouveau显卡驱动，后重启系统</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">$ sudo bash -c &#34;echo blacklist nouveau &gt; /etc/modprobe.d/blacklist-nvidia-nouveau.conf&#34;
+</span></span><span class="line"><span class="cl">$ sudo bash -c &#34;echo options nouveau modeset=0 &gt;&gt; /etc/modprobe.d/blacklist-nvidia-nouveau.conf&#34;
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><strong>步骤四</strong>：安装新驱动时，需要停止当前显示功能，使用命令telinit进入运行级别3，搭配快捷键CTRL+ALT+F1登录</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">$ sudo telinit 3
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><strong>步骤五</strong>：使用命令bash开始安装</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">$ sudo bash NVIDIA-Linux-x86_64-410.73.bin
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>安装过程中的部分问题回答</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">The distribution-provided pre-install script failed!
+</span></span><span class="line"><span class="cl">Are you sure you want to continue? -&gt; CONTINUE INSTALLATION
+</span></span><span class="line"><span class="cl">Would you like to run the nvidia-xconfig utility? -&gt; YES 
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>方法三适用不方便联网的场合，安装过程属实复杂。当且仅当在方法三中出现 <strong>禁用默认nouveau驱动</strong> 的操作，方法一和方法二并不需要。方法二和方法三并没测试过，其安装过程仅供参考!</p>
+<h1 id="参考资料">参考资料
+</h1><p>[1] <a class="link" href="https://linuxconfig.org/how-to-install-the-nvidia-drivers-on-ubuntu-18-04-bionic-beaver-linux"  target="_blank" rel="noopener"
+    >Install NVIDIA drivers on Ubuntu 18.04</a></p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+
+    </footer>
+
+
+    
+        <link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI&#43;WdtXRGWt2kTvGFasHpSy3SV"crossorigin="anonymous"
+            ><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG&#43;vnGctmUb0ZY0l8"crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"integrity="sha384-&#43;VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4&#43;/RRE05"crossorigin="anonymous"
+                defer
+                >
+            </script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        renderMathInElement(document.body, {
+            delimiters: [
+                { left: "$$", right: "$$", display: true },
+                { left: "$", right: "$", display: false },
+                { left: "\\(", right: "\\)", display: false },
+                { left: "\\[", right: "\\]", display: true }
+            ],
+            ignoredClasses: ["gist"]
+        });})
+</script>
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">相关文章</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/p/pyinstaller%E6%89%93%E5%8C%85pytorch%E4%BB%A3%E7%A0%81/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Pyinstaller打包pytorch代码</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/%E4%BA%91%E9%A1%B6%E4%B9%8B%E5%BC%88-%E8%BE%85%E5%8A%A9%E9%AB%98%E4%BA%AE%E6%98%BE%E7%A4%BA/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">云顶之弈 辅助高亮显示</h2>
+        </div>
+    </a>
+</article>
+
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+        2024 想起床的方差
+    </section>
+    
+    <section class="powerby">
+        使用 <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> 构建 <br />
+        主题 <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.26.0">Stack</a></b> 由 <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a> 设计
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+
+            </main>
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

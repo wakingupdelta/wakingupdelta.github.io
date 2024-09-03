@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="zh-cn" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="引言 第一次尝试用 Pyinstaller 打包 pytorch 代码，碰见了很多问题，也耗费了许多时间！想把这个过程中碰到的问题与解决方法记录一下，方便后来者 一、开箱使用 1.1 基本流程">
+<title>Pyinstaller打包pytorch代码</title>
+
+<link rel='canonical' href='https://wakingupdelta.github.io/p/pyinstaller%E6%89%93%E5%8C%85pytorch%E4%BB%A3%E7%A0%81/'>
+
+<link rel="stylesheet" href="/scss/style.min.0304c6baf04e01a8fe70693791cb744d56a3578a3120a8796cefc66825aa39c7.css"><meta property='og:title' content="Pyinstaller打包pytorch代码">
+<meta property='og:description' content="引言 第一次尝试用 Pyinstaller 打包 pytorch 代码，碰见了很多问题，也耗费了许多时间！想把这个过程中碰到的问题与解决方法记录一下，方便后来者 一、开箱使用 1.1 基本流程">
+<meta property='og:url' content='https://wakingupdelta.github.io/p/pyinstaller%E6%89%93%E5%8C%85pytorch%E4%BB%A3%E7%A0%81/'>
+<meta property='og:site_name' content='想起床的方差'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:published_time' content='2024-04-28T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2024-04-28T00:00:00&#43;00:00'/>
+<meta name="twitter:title" content="Pyinstaller打包pytorch代码">
+<meta name="twitter:description" content="引言 第一次尝试用 Pyinstaller 打包 pytorch 代码，碰见了很多问题，也耗费了许多时间！想把这个过程中碰到的问题与解决方法记录一下，方便后来者 一、开箱使用 1.1 基本流程">
+    <link rel="shortcut icon" href="/favicon.ico" />
+
+  
+
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "dark");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+            
+            <figure class="site-avatar">
+                <a href="/">
+                
+                    
+                    
+                    
+                        
+                        <img src="/img/avatar_hu002516796a89100b6bac501e69a8f35d_5680_300x0_resize_box_3.png" width="300"
+                            height="300" class="site-logo" loading="lazy" alt="Avatar">
+                    
+                
+                </a>
+                
+            </figure>
+            
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">想起床的方差</a></h1>
+            <h2 class="site-description">要多想，要多想，要多想</h2>
+        </div>
+    </header><ol class="menu-social">
+            
+                <li>
+                    <a 
+                        href='https://juejin.cn/user/1819016667072378'
+                        target="_blank"
+                        title="JueJin"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-brand-juejin"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M2 12l10 7.422l10 -7.422" /><path d="M7 9l5 4l5 -4" /><path d="M11 6l1 .8l1 -.8l-1 -.8z" /></svg>
+                        
+                    </a>
+                </li>
+            
+        </ol><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="5 12 3 12 12 3 21 12 19 12" />
+  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+</svg>
+
+
+
+                
+                <span>主页</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>暗色模式</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/%E5%B7%A5%E5%85%B7/" >
+                工具
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/p/pyinstaller%E6%89%93%E5%8C%85pytorch%E4%BB%A3%E7%A0%81/">Pyinstaller打包pytorch代码</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">2024-04-28</time>
+            </div>
+        
+
+        
+    </footer>
+    
+
+    
+</div>
+
+</header>
+
+    <section class="article-content">
+    
+    
+    <h1 id="引言">引言
+</h1><p>第一次尝试用 <strong>Pyinstaller</strong> 打包 <strong>pytorch</strong> 代码，碰见了很多问题，也耗费了许多时间！想把这个过程中碰到的问题与解决方法记录一下，方便后来者</p>
+<h1 id="一开箱使用">一、开箱使用
+</h1><h2 id="11-基本流程">1.1 基本流程
+</h2><p>在 <strong>windows</strong> 平台上，打包 <strong>pytorch</strong> 代码的基本流程如下：</p>
+<ul>
+<li>环境配置与测试</li>
+<li>打包与本地调试</li>
+<li>生产环境部署与测试</li>
+</ul>
+<h2 id="12-环境配置与测试">1.2 环境配置与测试
+</h2><p>在 <strong>Pycharm</strong> 打开项目，点击 <strong>Terminal</strong>，输入命令 <code>pip install pyinstaller</code>，安装打包框架<strong>Pyinstaller</strong>，后编写测试文件  <em><strong>hello.py</strong></em>:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="k">if</span>  <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="s2">&#34;Hello World!&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="k">pass</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>需确保 <strong>Terminal</strong> 路径为项目根目录，执行 <code>pyinstaller -F hello.py</code> 开始打包！在文件夹 <strong>dist</strong> 中找到 <strong>hello.exe</strong> 程序，若运行通过，说明环境配置成功</p>
+<h2 id="13-打包与本地调试">1.3 打包与本地调试
+</h2><p>实际的项目一般是多文件，打包过程较复杂，需把握两个核心要素：</p>
+<ul>
+<li>spec文件的配置</li>
+<li>依赖项补齐</li>
+</ul>
+<h3 id="131--spec文件的配置">1.3.1  spec文件的配置
+</h3><p>关于.spec文件配置详见参考资料 <a class="link" href="https://blog.csdn.net/weixin_41870706/article/details/101780731"  target="_blank" rel="noopener"
+    >[1]</a>，本文不赘述</p>
+<h3 id="132--依赖项补齐">1.3.2  依赖项补齐
+</h3><p>在测试阶段，应使用-D模式打包，方便分析缺失的依赖项。运行打包后的程序，常报如下错误：</p>
+<p><img src="/p/pyinstaller%E6%89%93%E5%8C%85pytorch%E4%BB%A3%E7%A0%81/image-20240903141254175.png"
+	width="1224"
+	height="95"
+	srcset="/p/pyinstaller%E6%89%93%E5%8C%85pytorch%E4%BB%A3%E7%A0%81/image-20240903141254175_hua214236ce2a721fda59fdbd749f9c0f6_137563_480x0_resize_box_3.png 480w, /p/pyinstaller%E6%89%93%E5%8C%85pytorch%E4%BB%A3%E7%A0%81/image-20240903141254175_hua214236ce2a721fda59fdbd749f9c0f6_137563_1024x0_resize_box_3.png 1024w"
+	loading="lazy"
+	
+		alt="image-20240903141254175"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="1288"
+		data-flex-basis="3092px"
+	
+>以上的输出信息表明缺少 <strong>caffe2_nvrtc.dll</strong> 或对应的 <strong>依赖项</strong>，补齐过程如下:</p>
+<ul>
+<li>判断输出信息路径中 <strong>caffe2_nvrtc.dll</strong> 是否存在</li>
+<li>若不存在，直接在 <strong>Anaconda</strong> 环境搜索 <strong>caffe2_nvrtc.dll</strong>，粘贴到 <strong>根目录</strong></li>
+<li>若存在，说明是缺少依赖项，使用 <strong>Dependencies</strong> 工具分析 <strong>caffe2_nvrtc.dll</strong> 所需要的依赖项，后补齐到<strong>根目录</strong>下</li>
+</ul>
+<p><strong>Dependencies</strong> 是一个分析依赖项的工具，可在参考资料 <a class="link" href="https://github.com/lucasg/Dependencies"  target="_blank" rel="noopener"
+    >[2]</a> 中安装，使用时直接将 <strong>dll文件</strong> 拖进去。这里以 <em><strong>torch_python.dll</strong></em> 举例</p>
+<p><img src="/p/pyinstaller%E6%89%93%E5%8C%85pytorch%E4%BB%A3%E7%A0%81/image-20240903141358548.png"
+	width="1217"
+	height="767"
+	srcset="/p/pyinstaller%E6%89%93%E5%8C%85pytorch%E4%BB%A3%E7%A0%81/image-20240903141358548_hua431770df306b4cdd6865966889f62a4_415390_480x0_resize_box_3.png 480w, /p/pyinstaller%E6%89%93%E5%8C%85pytorch%E4%BB%A3%E7%A0%81/image-20240903141358548_hua431770df306b4cdd6865966889f62a4_415390_1024x0_resize_box_3.png 1024w"
+	loading="lazy"
+	
+		alt="image-20240903141358548"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="158"
+		data-flex-basis="380px"
+	
+></p>
+<p>可以发现，缺少若干个dll文件，补齐即可。重复迭代上述补齐操作，基本可解决dll报错的问题</p>
+<h2 id="14-生产环境部署与测试">1.4 生产环境部署与测试
+</h2><p>博主使用的是pytorch的GPU版本，故在生产环境上需配置cuda。建议pytorch程序显式提供cpu推理功能，以便在测试时可排除cuda环境造成的问题。最后，祝大家好运，打包成功那一刻是蛮喜悦的！</p>
+<h1 id="参考资料">参考资料
+</h1><p><a class="link" href="https://blog.csdn.net/weixin_41870706/article/details/101780731"  target="_blank" rel="noopener"
+    >[1] spec文件配置</a><br>
+<a class="link" href="https://github.com/lucasg/Dependencies"  target="_blank" rel="noopener"
+    >[2] Dependencies的安装</a><br>
+<a class="link" href="https://blog.csdn.net/weixin_41870706/article/details/101780731"  target="_blank" rel="noopener"
+    >[3] python项目（非单一.py文件）用Pyinstaller打包发布成exe，在windos上运行程序</a><br>
+<a class="link" href="https://medium.com/@exexzxzpo/%E5%98%97%E8%A9%A6%E4%BD%BF%E7%94%A8pyinstaller%E6%89%93%E5%8C%85yolov5%E4%B8%ADdetect-py%E6%96%87%E4%BB%B6-%E5%90%ABpytorch%E6%A1%86%E6%9E%B6-%E6%89%80%E9%81%87%E5%88%B0%E7%9A%84%E5%95%8F%E9%A1%8C-543f5481b304"  target="_blank" rel="noopener"
+    >[4] 嘗試使用Pyinstaller打包yolov5中detect.py文件(含pytorch框架)所遇到的問題</a><br>
+<a class="link" href="https://www.bilibili.com/video/BV1bp4y1D7Dg?spm_id_from=333.880.my_history.page.click"  target="_blank" rel="noopener"
+    >[5] pyinstaller打包经验分享以及一些错误解决方法</a></p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+
+    </footer>
+
+
+    
+        <link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI&#43;WdtXRGWt2kTvGFasHpSy3SV"crossorigin="anonymous"
+            ><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG&#43;vnGctmUb0ZY0l8"crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"integrity="sha384-&#43;VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4&#43;/RRE05"crossorigin="anonymous"
+                defer
+                >
+            </script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        renderMathInElement(document.body, {
+            delimiters: [
+                { left: "$$", right: "$$", display: true },
+                { left: "$", right: "$", display: false },
+                { left: "\\(", right: "\\)", display: false },
+                { left: "\\[", right: "\\]", display: true }
+            ],
+            ignoredClasses: ["gist"]
+        });})
+</script>
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">相关文章</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/p/ubuntu%E9%A9%B1%E5%8A%A8%E5%AE%89%E8%A3%85%E4%B8%80%E5%8F%91%E5%85%A5%E9%AD%82/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Ubuntu驱动安装，一发入魂</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/%E4%BA%91%E9%A1%B6%E4%B9%8B%E5%BC%88-%E8%BE%85%E5%8A%A9%E9%AB%98%E4%BA%AE%E6%98%BE%E7%A4%BA/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">云顶之弈 辅助高亮显示</h2>
+        </div>
+    </a>
+</article>
+
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+        2024 想起床的方差
+    </section>
+    
+    <section class="powerby">
+        使用 <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> 构建 <br />
+        主题 <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.26.0">Stack</a></b> 由 <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a> 设计
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+
+            </main>
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>
