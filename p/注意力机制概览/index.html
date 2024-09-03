@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 <html lang="zh-cn" dir="ltr">
     <head><meta charset='utf-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="">
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="一、背景 注意力机制可有效提高模型对特征的提取能力，进而提高模型精度。本文首先对经典的三种注意力学习方法进行介绍，后结合自己一点点浅薄认知，对">
 <title>注意力机制概览</title>
 
 <link rel='canonical' href='https://wakingupdelta.github.io/p/%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B6%E6%A6%82%E8%A7%88/'>
 
 <link rel="stylesheet" href="/scss/style.min.0304c6baf04e01a8fe70693791cb744d56a3578a3120a8796cefc66825aa39c7.css"><meta property='og:title' content="注意力机制概览">
-<meta property='og:description' content="">
+<meta property='og:description' content="一、背景 注意力机制可有效提高模型对特征的提取能力，进而提高模型精度。本文首先对经典的三种注意力学习方法进行介绍，后结合自己一点点浅薄认知，对">
 <meta property='og:url' content='https://wakingupdelta.github.io/p/%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B6%E6%A6%82%E8%A7%88/'>
 <meta property='og:site_name' content='想起床的方差'>
 <meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:published_time' content='2024-05-12T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2024-05-12T00:00:00&#43;00:00'/>
 <meta name="twitter:title" content="注意力机制概览">
-<meta name="twitter:description" content="">
+<meta name="twitter:description" content="一、背景 注意力机制可有效提高模型对特征的提取能力，进而提高模型精度。本文首先对经典的三种注意力学习方法进行介绍，后结合自己一点点浅薄认知，对">
     <link rel="shortcut icon" href="/favicon.ico" />
 
   
@@ -207,7 +207,142 @@
     <section class="article-content">
     
     
-    
+    <h1 id="一背景">一、背景
+</h1><p>注意力机制可有效提高模型对特征的提取能力，进而提高模型精度。本文首先对经典的三种注意力学习方法进行介绍，后结合自己一点点浅薄认知，对注意力机制后续的改进方向进行归纳，希望对大家能有帮助</p>
+<h1 id="二前置知识">二、前置知识
+</h1><h2 id="21-通道注意力">2.1 通道注意力
+</h2><img src="image-20240903143439161.png" alt="image-20240903143439161" style="zoom:67%;" />
+对特征图进行全局平均池化，后经过两层全连接层，最后使用Sigmoid输出0-1之间的权重
+<h2 id="22-空间注意力">2.2 空间注意力
+</h2><img src="image-20240903143451755.png" alt="image-20240903143451755" style="zoom:67%;" />
+将特征图进行压缩，得到空间方向上的权重图
+<h2 id="23-self-attention">2.3 self-attention
+</h2><img src="image-20240903143502737.png" alt="image-20240903143502737" style="zoom:67%;" />
+<p>这里借助了Non-local Neural Networks中的一张图。self-attention本质上是一种空间注意机制，如上图所示，需要求解一个[THW, THW]的矩阵，该矩阵中的每一行，表示原特征图中的一点与其余点的关系</p>
+<h1 id="三各种改进版本">三、各种改进版本
+</h1><p>将改进的注意力机制主要分为四类</p>
+<ul>
+<li>跨特征：构建不同的特征表达，后进行融合</li>
+<li>分组：对特征图按通道分组后，再使用注意力机制</li>
+<li>self-attention：本质上，self-attention就是一系列矩阵运算，对运算过程中的某些步骤进行优化</li>
+<li>空间+通道：很自然的想法，同时使用两种注意力机制</li>
+</ul>
+<h2 id="31-跨特征">3.1 跨特征
+</h2><h4 id="311-bisenet">3.1.1 BiSeNet
+</h4><img src="image-20240903143515154.png" alt="image-20240903143515154" style="zoom:67%;" />
+对不同层次的特征使用通道注意力机制进行融合。这应该属于应用创新，没有构建新的注意力机制，而是将老的注意力机制应用到特征融合方向
+<h4 id="312-sknet">3.1.2 SKNet
+</h4><p><img src="/p/%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B6%E6%A6%82%E8%A7%88/image-20240903143528059.png"
+	width="1257"
+	height="359"
+	srcset="/p/%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B6%E6%A6%82%E8%A7%88/image-20240903143528059_hu4188395624d6c6de293fd145c8a93efd_185865_480x0_resize_box_3.png 480w, /p/%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B6%E6%A6%82%E8%A7%88/image-20240903143528059_hu4188395624d6c6de293fd145c8a93efd_185865_1024x0_resize_box_3.png 1024w"
+	loading="lazy"
+	
+		alt="image-20240903143528059"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="350"
+		data-flex-basis="840px"
+	
+></p>
+<p>使用不同感受野卷积核构建多分支特征，将这些特征 add 后计算不同分支的同道注意力系数，后沿着通道方向进行加权求和</p>
+<h2 id="32-分组">3.2 分组
+</h2><h3 id="321-sgnet">3.2.1 SGNet
+</h3><p><img src="/p/%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B6%E6%A6%82%E8%A7%88/image-20240903143537682.png"
+	width="1252"
+	height="426"
+	srcset="/p/%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B6%E6%A6%82%E8%A7%88/image-20240903143537682_hud065ca2fd1dda1682e5e65c580ff9f53_319318_480x0_resize_box_3.png 480w, /p/%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B6%E6%A6%82%E8%A7%88/image-20240903143537682_hud065ca2fd1dda1682e5e65c580ff9f53_319318_1024x0_resize_box_3.png 1024w"
+	loading="lazy"
+	
+		alt="image-20240903143537682"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="293"
+		data-flex-basis="705px"
+	
+></p>
+<p>对每个组，先计算向量x的平均值（全局平均池化），后将利用该向量对特征图沿着通道 方向加权求和得到 空间注意力，再归一化，后经sigmoid函数输出</p>
+<h3 id="322-sanet">3.2.2 SANet
+</h3><p><img src="/p/%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B6%E6%A6%82%E8%A7%88/image-20240903143548571.png"
+	width="1256"
+	height="347"
+	srcset="/p/%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B6%E6%A6%82%E8%A7%88/image-20240903143548571_hube3e2276944c2386941e589284b66220_149550_480x0_resize_box_3.png 480w, /p/%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B6%E6%A6%82%E8%A7%88/image-20240903143548571_hube3e2276944c2386941e589284b66220_149550_1024x0_resize_box_3.png 1024w"
+	loading="lazy"
+	
+		alt="image-20240903143548571"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="361"
+		data-flex-basis="868px"
+	
+></p>
+<p>将特征沿着通道分组，对每一组，再分成 空间注意力 和 通道注意力。对空间注意力，使用Group normalization实现。将分组结果进行拼接，后使用类似ShufflfleNet v2的方法进行channel shuffle</p>
+<h2 id="33-self-attention">3.3 Self Attention
+</h2><h3 id="331-non-local-attention">3.3.1 non local attention
+</h3><img src="image-20240903143603023.png" alt="image-20240903143603023" style="zoom:67%;" />
+<p>定义了不同形式计算向量相似性的函数，提出self attention是non local attention 的特例</p>
+<h3 id="332-gcnet">3.3.2 GCNet
+</h3><p><img src="/p/%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B6%E6%A6%82%E8%A7%88/image-20240903143615249.png"
+	width="1260"
+	height="424"
+	srcset="/p/%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B6%E6%A6%82%E8%A7%88/image-20240903143615249_hu1aa83e91a93954a70623cd5a573c4860_237508_480x0_resize_box_3.png 480w, /p/%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B6%E6%A6%82%E8%A7%88/image-20240903143615249_hu1aa83e91a93954a70623cd5a573c4860_237508_1024x0_resize_box_3.png 1024w"
+	loading="lazy"
+	
+		alt="image-20240903143615249"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="297"
+		data-flex-basis="713px"
+	
+></p>
+<p>指出non local attention不同位置的attention map基本一致，只计算Cx1x1的特征图</p>
+<h3 id="333-dual-attention">3.3.3 dual attention
+</h3><img src="image-20240903143636442.png" alt="image-20240903143636442" style="zoom: 50%;" />
+<p>并联non local attention 和 GCnet</p>
+<h2 id="34-空间通道">3.4 空间+通道
+</h2><h3 id="341-bam">3.4.1 BAM
+</h3><p><img src="/p/%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B6%E6%A6%82%E8%A7%88/image-20240903143651005.png"
+	width="1259"
+	height="445"
+	srcset="/p/%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B6%E6%A6%82%E8%A7%88/image-20240903143651005_hu64b85001a552aa50dce13d8f55530e40_190059_480x0_resize_box_3.png 480w, /p/%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B6%E6%A6%82%E8%A7%88/image-20240903143651005_hu64b85001a552aa50dce13d8f55530e40_190059_1024x0_resize_box_3.png 1024w"
+	loading="lazy"
+	
+		alt="image-20240903143651005"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="282"
+		data-flex-basis="679px"
+	
+></p>
+<p>并联，attention map先相加（利用了广播机制），后与原特征图相乘</p>
+<h3 id="342-scse">3.4.2 scSE
+</h3><img src="image-20240903143703961.png" alt="image-20240903143703961" style="zoom:50%;" />
+<p>并联，attention map先各自相乘，后取最大值得到最终输出</p>
+<h1 id="参考文献">参考文献
+</h1><p><a class="link" href="https://openaccess.thecvf.com/content_ECCV_2018/papers/Changqian_Yu_BiSeNet_Bilateral_Segmentation_ECCV_2018_paper.pdf"  target="_blank" rel="noopener"
+    >[1] BiSeNet: Bilateral Segmentation Network for Real-time Semantic Segmentation</a></p>
+<p><a class="link" href="https://openaccess.thecvf.com/content_CVPR_2019/papers/Li_Selective_Kernel_Networks_CVPR_2019_paper.pdf"  target="_blank" rel="noopener"
+    >[2] Selective Kernel Networks</a></p>
+<p><a class="link" href="https://arxiv.org/pdf/1905.09646.pdf"  target="_blank" rel="noopener"
+    >[3] Spatial Group-wise Enhance: Improving Semantic Feature Learning in Convolutional Networks</a></p>
+<p><a class="link" href="https://arxiv.org/pdf/2102.00240.pdf"  target="_blank" rel="noopener"
+    >[4] SA-NET: SHUFFLE ATTENTION FOR DEEP CONVOLUTIONAL NEURAL NETWORKS</a></p>
+<p><a class="link" href="https://openaccess.thecvf.com/content_cvpr_2018/papers/Wang_Non-Local_Neural_Networks_CVPR_2018_paper.pdf"  target="_blank" rel="noopener"
+    >[5] Non-local Neural Networks</a></p>
+<p><a class="link" href="https://openaccess.thecvf.com/content_ICCVW_2019/papers/NeurArch/Cao_GCNet_Non-Local_Networks_Meet_Squeeze-Excitation_Networks_and_Beyond_ICCVW_2019_paper.pdf"  target="_blank" rel="noopener"
+    >[6] GCNet: Non-local Networks Meet Squeeze-Excitation Networks and Beyond</a></p>
+<p><a class="link" href="https://openaccess.thecvf.com/content_CVPR_2019/papers/Fu_Dual_Attention_Network_for_Scene_Segmentation_CVPR_2019_paper.pdf"  target="_blank" rel="noopener"
+    >[7] Dual Attention Network for Scene Segmentation</a></p>
+<p><a class="link" href="https://arxiv.org/pdf/1807.06514.pdf"  target="_blank" rel="noopener"
+    >[8] BAM: Bottleneck Attention Module</a></p>
+<p><a class="link" href="https://arxiv.org/pdf/1808.08127.pdf"  target="_blank" rel="noopener"
+    >[9] Recalibrating Fully Convolutional Networks with Spatial and Channel ‘Squeeze &amp; Excitation’ Blocks</a></p>
+
 </section>
 
 
@@ -247,41 +382,6 @@
     
 
     
-
-<aside class="related-content--wrapper">
-    <h2 class="section-title">相关文章</h2>
-    <div class="related-content">
-        <div class="flex article-list--tile">
-            
-                
-<article class="">
-    <a href="/p/%E5%9F%BA%E4%BA%8E%E4%B8%80%E8%87%B4%E6%80%A7%E7%9A%84%E5%8D%8A%E7%9B%91%E7%9D%A3%E5%AD%A6%E4%B9%A0/">
-        
-        
-
-        <div class="article-details">
-            <h2 class="article-title">基于一致性的半监督学习</h2>
-        </div>
-    </a>
-</article>
-
-            
-                
-<article class="">
-    <a href="/p/%E6%94%B9%E9%80%A0nnunet%E5%B5%8C%E5%85%A5%E7%AC%AC%E4%B8%89%E6%96%B9%E7%BD%91%E7%BB%9C/">
-        
-        
-
-        <div class="article-details">
-            <h2 class="article-title">改造nnUnet，嵌入第三方网络</h2>
-        </div>
-    </a>
-</article>
-
-            
-        </div>
-    </div>
-</aside>
 
      
     

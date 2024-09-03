@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 <html lang="zh-cn" dir="ltr">
     <head><meta charset='utf-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="">
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="一、背景 医学图像的标注成本十分高昂，其标注数据规模往往较小。通过半监督学习的方法，利用大量的未标注数据，可有效提高模型的学习能力 二、基本分类">
 <title>基于一致性的半监督学习</title>
 
 <link rel='canonical' href='https://wakingupdelta.github.io/p/%E5%9F%BA%E4%BA%8E%E4%B8%80%E8%87%B4%E6%80%A7%E7%9A%84%E5%8D%8A%E7%9B%91%E7%9D%A3%E5%AD%A6%E4%B9%A0/'>
 
 <link rel="stylesheet" href="/scss/style.min.0304c6baf04e01a8fe70693791cb744d56a3578a3120a8796cefc66825aa39c7.css"><meta property='og:title' content="基于一致性的半监督学习">
-<meta property='og:description' content="">
+<meta property='og:description' content="一、背景 医学图像的标注成本十分高昂，其标注数据规模往往较小。通过半监督学习的方法，利用大量的未标注数据，可有效提高模型的学习能力 二、基本分类">
 <meta property='og:url' content='https://wakingupdelta.github.io/p/%E5%9F%BA%E4%BA%8E%E4%B8%80%E8%87%B4%E6%80%A7%E7%9A%84%E5%8D%8A%E7%9B%91%E7%9D%A3%E5%AD%A6%E4%B9%A0/'>
 <meta property='og:site_name' content='想起床的方差'>
 <meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:published_time' content='2024-05-01T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2024-05-01T00:00:00&#43;00:00'/>
 <meta name="twitter:title" content="基于一致性的半监督学习">
-<meta name="twitter:description" content="">
+<meta name="twitter:description" content="一、背景 医学图像的标注成本十分高昂，其标注数据规模往往较小。通过半监督学习的方法，利用大量的未标注数据，可有效提高模型的学习能力 二、基本分类">
     <link rel="shortcut icon" href="/favicon.ico" />
 
   
@@ -207,7 +207,48 @@
     <section class="article-content">
     
     
-    
+    <h1 id="一背景">一、背景
+</h1><p>医学图像的标注成本十分高昂，其标注数据规模往往较小。通过半监督学习的方法，利用大量的未标注数据，可有效提高模型的学习能力</p>
+<h1 id="二基本分类">二、基本分类
+</h1><img src="image-20240903143111694.png" alt="image-20240903143111694" style="zoom: 50%;" />
+<p>如上图所示，仅有正方形的数据点，无法学习真实的数据分布，通过引入大量的未标注的圆形点，可得知数据的真实情况，这便是半监督学习的基本原理。</p>
+<p>对于有标注的输入样本，因为有标签作为监督信号，所以很自然可以定义损失函数。对于未标注样本，需要自行构建监督信号。基本可分为两大类，一类是熵最小化约束，使模型趋向于得出高置信度的预测结果，另一类则是一致性约束，对输入或模型添加各种干扰，但模型依然具有稳定的输出。一致性约束是本文的重点，简单来说，就是通过各种奇技淫巧，使得模型对一个输入，具有不同的输出，然后让两个输出趋向一致，这就能构建出监督信号</p>
+<h1 id="三一致性约束">三、一致性约束
+</h1><h2 id="31-基本架构">3.1 基本架构
+</h2><h3 id="311-mean-teacher">3.1.1 mean teacher
+</h3><img src="image-20240903143141868.png" alt="image-20240903143141868" style="zoom: 67%;" />
+Mean Teacher模型是经典的半监督方法，学生模型通过EMA方法更新参数，然后约束教师模型和学生模型之间的一致性
+<h3 id="312-多个子模型">3.1.2 多个子模型
+</h3><img src="image-20240903143200747.png" alt="image-20240903143200747" style="zoom:80%;" />
+直接构建两个独立的子模型，一个是卷积架构，另一个是transformer架构
+<h3 id="313-多个解码器">3.1.3 多个解码器
+</h3><img src="image-20240903143221906.png" alt="image-20240903143221906" style="zoom: 67%;" />
+<p>多个解码器</p>
+<h3 id="314-多尺度">3.1.4 多尺度
+</h3><img src="image-20240903143240369.png" alt="image-20240903143240369" style="zoom: 67%;" />
+使得解码器的不同层次输出保持一致性
+<h2 id="32-技巧">3.2 技巧
+</h2><p>基本架构应该就是上述的模型，后面就是使用各种技巧去提高模型的性能</p>
+<h3 id="321-不确定性">3.2.1 不确定性
+</h3><img src="image-20240903143300654.png" alt="image-20240903143300654" style="zoom:67%;" />
+<p>两输出中肯定存在某些区域更重要，通过不确定性对其加权</p>
+<h3 id="322-损失函数">3.2.2 损失函数
+</h3><img src="image-20240903143315908.png" alt="image-20240903143315908" style="zoom:67%;" />
+<p>类似知识蒸馏的方法，对输出取softmax操作时，添加温度参数T，使得具有更多信息，再去保持一致性。</p>
+<h1 id="参考文献">参考文献
+</h1><p><a class="link" href="https://proceedings.neurips.cc/paper/2017/file/68053af2923e00204c3ca7c6a3150cf7-Paper.pdf"  target="_blank" rel="noopener"
+    >[1] Mean teachers are better role models: Weight-averaged consistency targets improve semi-supervised deep learning results</a><br>
+<a class="link" href="https://proceedings.mlr.press/v172/luo22b/luo22b.pdf"  target="_blank" rel="noopener"
+    >[2] Semi-Supervised Medical Image Segmentation via Cross Teaching between CNN and Transformer</a><br>
+<a class="link" href="https://openaccess.thecvf.com/content_CVPR_2020/papers/Ouali_Semi-Supervised_Semantic_Segmentation_With_Cross-Consistency_Training_CVPR_2020_paper.pdf"  target="_blank" rel="noopener"
+    >[3] Semi-Supervised Semantic Segmentation with Cross-Consistency Training</a><br>
+<a class="link" href="https://arxiv.org/pdf/2012.07042.pdf"  target="_blank" rel="noopener"
+    >[4] Efficient Semi-Supervised Gross Target Volume of Nasopharyngeal Carcinoma Segmentation via Uncertainty Rectified Pyramid Consistency</a><br>
+<a class="link" href="https://arxiv.org/pdf/1907.07034.pdf"  target="_blank" rel="noopener"
+    >[5] Uncertainty-aware Self-ensembling Model for Semi-supervised 3D Left Atrium Segmentation</a><br>
+<a class="link" href="https://arxiv.org/pdf/2109.09960.pdf"  target="_blank" rel="noopener"
+    >[6] Mutual Consistency Learning for Semi-supervised Medical Image Segmentation</a></p>
+
 </section>
 
 
@@ -247,28 +288,6 @@
     
 
     
-
-<aside class="related-content--wrapper">
-    <h2 class="section-title">相关文章</h2>
-    <div class="related-content">
-        <div class="flex article-list--tile">
-            
-                
-<article class="">
-    <a href="/p/%E6%94%B9%E9%80%A0nnunet%E5%B5%8C%E5%85%A5%E7%AC%AC%E4%B8%89%E6%96%B9%E7%BD%91%E7%BB%9C/">
-        
-        
-
-        <div class="article-details">
-            <h2 class="article-title">改造nnUnet，嵌入第三方网络</h2>
-        </div>
-    </a>
-</article>
-
-            
-        </div>
-    </div>
-</aside>
 
      
     

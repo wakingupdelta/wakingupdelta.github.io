@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 <html lang="zh-cn" dir="ltr">
     <head><meta charset='utf-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="">
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="一、线程池 核心参数 corePoolSize 核心线程池大小 maximumPoolSize 线程池能创建线程的最大数量 keepAliveTime 空闲线程存活时间 workQueue 阻塞队列 handler 饱和策略 execute方法提交任务后，执行逻辑 小">
 <title>completablefuture概览</title>
 
 <link rel='canonical' href='https://wakingupdelta.github.io/p/completablefuture%E6%A6%82%E8%A7%88/'>
 
 <link rel="stylesheet" href="/scss/style.min.0304c6baf04e01a8fe70693791cb744d56a3578a3120a8796cefc66825aa39c7.css"><meta property='og:title' content="completablefuture概览">
-<meta property='og:description' content="">
+<meta property='og:description' content="一、线程池 核心参数 corePoolSize 核心线程池大小 maximumPoolSize 线程池能创建线程的最大数量 keepAliveTime 空闲线程存活时间 workQueue 阻塞队列 handler 饱和策略 execute方法提交任务后，执行逻辑 小">
 <meta property='og:url' content='https://wakingupdelta.github.io/p/completablefuture%E6%A6%82%E8%A7%88/'>
 <meta property='og:site_name' content='想起床的方差'>
 <meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:published_time' content='2024-06-26T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2024-06-26T00:00:00&#43;00:00'/>
 <meta name="twitter:title" content="completablefuture概览">
-<meta name="twitter:description" content="">
+<meta name="twitter:description" content="一、线程池 核心参数 corePoolSize 核心线程池大小 maximumPoolSize 线程池能创建线程的最大数量 keepAliveTime 空闲线程存活时间 workQueue 阻塞队列 handler 饱和策略 execute方法提交任务后，执行逻辑 小">
     <link rel="shortcut icon" href="/favicon.ico" />
 
   
@@ -207,7 +207,176 @@
     <section class="article-content">
     
     
-    
+    <h3 id="一线程池">一、线程池
+</h3><p>核心参数</p>
+<ul>
+<li>corePoolSize 核心线程池大小</li>
+<li>maximumPoolSize 线程池能创建线程的最大数量</li>
+<li>keepAliveTime 空闲线程存活时间</li>
+<li>workQueue 阻塞队列</li>
+<li>handler 饱和策略</li>
+</ul>
+<p>execute方法提交任务后，执行逻辑</p>
+<ul>
+<li>小于核心线程数，创建新线程</li>
+<li>阻塞队列未满，入队</li>
+<li>线程池未满，创建</li>
+<li>按饱和策略处理</li>
+</ul>
+<h3 id="二对比future">二、对比Future
+</h3><p>特点</p>
+<ul>
+<li>支持回调通知
+<ul>
+<li>Future需不断轮询判断任务是否结束</li>
+</ul>
+</li>
+<li>便于将不同异步操作组合
+<ul>
+<li>Future编排回调存在回调地狱问题</li>
+</ul>
+</li>
+</ul>
+<h3 id="三简单使用">三、简单使用
+</h3><h4 id="31-创建">3.1 创建
+</h4><p>通过静态方法创建实例</p>
+<ul>
+<li>runAsync 无返回值</li>
+<li>supplyAsync 有返回值</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="n">CompletableFuture</span><span class="p">.</span><span class="na">runAsync</span><span class="p">(</span><span class="n">Runnable</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">CompletableFuture</span><span class="p">.</span><span class="na">runAsync</span><span class="p">(</span><span class="n">Runnable</span><span class="p">,</span><span class="w"> </span><span class="n">Executor</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">CompletableFuture</span><span class="p">.</span><span class="na">supplyAsync</span><span class="p">(</span><span class="n">Supplier</span><span class="o">&lt;</span><span class="n">U</span><span class="o">&gt;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">CompletableFuture</span><span class="p">.</span><span class="na">supplyAsync</span><span class="p">(</span><span class="n">Supplier</span><span class="o">&lt;</span><span class="n">U</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="n">Executor</span><span class="p">);</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h4 id="32-依赖单个任务">3.2 依赖单个任务
+</h4><h5 id="321-顺序执行">3.2.1 顺序执行
+</h5><ul>
+<li>thenRun 无入参，无返回值</li>
+<li>thenAccept 有入参，无返回值</li>
+<li>thenApply 有入参，有返回值</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="n">CompletableFuture</span><span class="p">.</span><span class="na">supplyAsync</span><span class="p">(()</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="s">&#34;request&#34;</span><span class="p">).</span><span class="na">thenRun</span><span class="p">(()</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="p">{});</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">CompletableFuture</span><span class="p">.</span><span class="na">supplyAsync</span><span class="p">(()</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="s">&#34;request&#34;</span><span class="p">).</span><span class="na">thenAccept</span><span class="p">(</span><span class="n">request</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="p">{});</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">CompletableFuture</span><span class="p">.</span><span class="na">supplyAsync</span><span class="p">(()</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="s">&#34;request&#34;</span><span class="p">).</span><span class="na">thenRun</span><span class="p">(</span><span class="n">request</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="s">&#34;print --&gt; &#34;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">request</span><span class="p">);</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h5 id="322-异常处理">3.2.2 异常处理
+</h5><p>两种方式 exceptionally 和 handle</p>
+<h4 id="33-依赖多个任务">3.3 依赖多个任务
+</h4><h5 id="331-and">3.3.1 and
+</h5><ul>
+<li>thenAfterBoth 无入参，无返回</li>
+<li>thenAcceptBoth 有入参，无返回</li>
+<li>thenCombine 有入参，有返回</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="n">cfA</span><span class="p">.</span><span class="na">runAfterBoth</span><span class="p">(</span><span class="n">cfB</span><span class="p">,</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="p">{});</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">cfA</span><span class="p">.</span><span class="na">tehnAcceptBoth</span><span class="p">(</span><span class="n">cfB</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="w"> </span><span class="n">B</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="p">{});</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">cfA</span><span class="p">.</span><span class="na">tehnAcceptBoth</span><span class="p">(</span><span class="n">cfB</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="w"> </span><span class="n">B</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">B</span><span class="p">);</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>静态方法 allOf 等待多个任务都完成，无返回值</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="n">CompletableFuture</span><span class="p">.</span><span class="na">allOf</span><span class="p">(</span><span class="n">cfA</span><span class="p">,</span><span class="w"> </span><span class="n">cfB</span><span class="p">,</span><span class="w"> </span><span class="n">cfC</span><span class="p">)</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h5 id="332-or">3.3.2 or
+</h5><ul>
+<li>runAfterEither 无入参，无返回</li>
+<li>acceptEither 有入参，无返回</li>
+<li>applyToEither 有入参，有返回</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="n">cfA</span><span class="p">.</span><span class="na">runAfterEither</span><span class="p">(</span><span class="n">cfB</span><span class="p">,</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="p">{});</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">cfA</span><span class="p">.</span><span class="na">tehnAcceptEither</span><span class="p">(</span><span class="n">cfB</span><span class="p">,</span><span class="w"> </span><span class="n">req</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="p">{});</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">cfA</span><span class="p">.</span><span class="na">tehnAcceptEither</span><span class="p">(</span><span class="n">cfB</span><span class="p">,</span><span class="w"> </span><span class="n">req</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="s">&#34;req: &#34;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">req</span><span class="p">);</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>静态方法 anyOf 等待任一任务完成，返回类型为Object</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="n">CompletableFuture</span><span class="p">.</span><span class="na">anyOf</span><span class="p">(</span><span class="n">cfA</span><span class="p">,</span><span class="w"> </span><span class="n">cfB</span><span class="p">,</span><span class="w"> </span><span class="n">cfC</span><span class="p">)</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="四基本原理">四、基本原理
+</h3><p>CompletableFuture 有两个核心字段</p>
+<ul>
+<li>result 存当前CompletableFuture的结果</li>
+<li>Completion 存依赖动作</li>
+</ul>
+<p>不同CompletableFuture 如何编排起来？</p>
+<ul>
+<li>CompletableFuture 为 被观察者，Completion为 观察者</li>
+<li>当CompletableFuture完成后，通过postComplete方法通知Completion</li>
+<li>形象上讲，这种机制 在 不同CompletableFuture节点 间 添加了 边</li>
+</ul>
+<h3 id="五注意事项">五、注意事项
+</h3><h4 id="51-有无async后缀">5.1 有无Async后缀
+</h4><p>不带Async后缀的方法</p>
+<ul>
+<li>如果注册时被依赖的操作已经执行完成，则由当前线程执行</li>
+<li>如果注册时被依赖的操作还未执行完，则由回调线程执行</li>
+</ul>
+<p>带Async后缀的方法</p>
+<ul>
+<li>运行在指定线程池Executor</li>
+<li>当不传递Executor时，会使用ForkJoinPool中的共用线程池CommonPool</li>
+</ul>
+<h4 id="52-thencompose">5.2 thenCompose
+</h4><p>和thenCombine对比</p>
+<ul>
+<li>都是聚合任务</li>
+<li>combine聚合结果，compose把多个cf实例组合成一个整体</li>
+</ul>
+<p>和thenApply对比</p>
+<ul>
+<li>thenApply接收的函数返回一个具体的值，thenCompose接收的函数返回一个新的cf实例</li>
+<li>thenApply是同步，thenCompose是异步</li>
+</ul>
+<h3 id="参考资料">参考资料
+</h3><p><a class="link" href="https://javadoop.com/post/completable-future"  target="_blank" rel="noopener"
+    >[1] CompletableFuture使用介绍</a></p>
+<p><a class="link" href="https://tech.meituan.com/2022/05/12/principles-and-practices-of-completablefuture.html"  target="_blank" rel="noopener"
+    >[2] CompletableFuture原理与实践</a></p>
+
 </section>
 
 
@@ -247,28 +416,6 @@
     
 
     
-
-<aside class="related-content--wrapper">
-    <h2 class="section-title">相关文章</h2>
-    <div class="related-content">
-        <div class="flex article-list--tile">
-            
-                
-<article class="">
-    <a href="/p/javaweb%E6%A6%82%E8%A7%88/">
-        
-        
-
-        <div class="article-details">
-            <h2 class="article-title">javaweb概览</h2>
-        </div>
-    </a>
-</article>
-
-            
-        </div>
-    </div>
-</aside>
 
      
     

@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 <html lang="zh-cn" dir="ltr">
     <head><meta charset='utf-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="">
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="引言 nnUnet 是有监督的医学图像分割绕不开的话题，其卓越的性能和简易的方法，为相关研究者提供了一项强有力的工具。然而，由于高度封装性，在原先代码中嵌">
 <title>改造nnUnet，嵌入第三方网络</title>
 
 <link rel='canonical' href='https://wakingupdelta.github.io/p/%E6%94%B9%E9%80%A0nnunet%E5%B5%8C%E5%85%A5%E7%AC%AC%E4%B8%89%E6%96%B9%E7%BD%91%E7%BB%9C/'>
 
 <link rel="stylesheet" href="/scss/style.min.0304c6baf04e01a8fe70693791cb744d56a3578a3120a8796cefc66825aa39c7.css"><meta property='og:title' content="改造nnUnet，嵌入第三方网络">
-<meta property='og:description' content="">
+<meta property='og:description' content="引言 nnUnet 是有监督的医学图像分割绕不开的话题，其卓越的性能和简易的方法，为相关研究者提供了一项强有力的工具。然而，由于高度封装性，在原先代码中嵌">
 <meta property='og:url' content='https://wakingupdelta.github.io/p/%E6%94%B9%E9%80%A0nnunet%E5%B5%8C%E5%85%A5%E7%AC%AC%E4%B8%89%E6%96%B9%E7%BD%91%E7%BB%9C/'>
 <meta property='og:site_name' content='想起床的方差'>
 <meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:published_time' content='2024-04-28T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2024-04-28T00:00:00&#43;00:00'/>
 <meta name="twitter:title" content="改造nnUnet，嵌入第三方网络">
-<meta name="twitter:description" content="">
+<meta name="twitter:description" content="引言 nnUnet 是有监督的医学图像分割绕不开的话题，其卓越的性能和简易的方法，为相关研究者提供了一项强有力的工具。然而，由于高度封装性，在原先代码中嵌">
     <link rel="shortcut icon" href="/favicon.ico" />
 
   
@@ -207,7 +207,128 @@
     <section class="article-content">
     
     
-    
+    <h1 id="引言">引言
+</h1><p><strong>nnUnet</strong> 是有监督的医学图像分割绕不开的话题，其卓越的性能和简易的方法，为相关研究者提供了一项强有力的工具。然而，由于高度封装性，在原先代码中嵌入自定义网络进行训练，并不是十分方便，本文旨在分享一点在使用 <strong>nnUnet</strong> 训练自定义网络过程中的一点经验，可能存在纰漏，欢迎在讨论区交流！</p>
+<h1 id="一配置环境">一、配置环境
+</h1><h2 id="11-硬件需求">1.1 硬件需求
+</h2><p><strong>nnUnet</strong> 的建议环境是Linux，若使用Windows，需修改路径相关代码（斜杠和反斜杠的替换），很麻烦（不推荐）。博主是在Ubuntu环境中使用Pycharm进行 <strong>nnUnet</strong> 的学习</p>
+<h2 id="12-软件需求">1.2 软件需求
+</h2><p><strong>nnUnet</strong> 官方推荐的使用方法是在命令行，但这不方便初学者学习。为了使用Pycharm的调试功能，需修改两个文件的代码 <em><strong>nnunetv2/paths.py</strong></em> 和 <em><strong>nnunetv2/run/run_training.py</strong></em></p>
+<h3 id="121-数据集路径">1.2.1 数据集路径
+</h3><p>位于 <em><strong>nnunetv2/paths.py</strong></em> 文件中，将三个变量路径修改为自己的路径。<strong>custom_</strong> 是博主自己定义的文件，大家可以随意实现</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">custom_</span> <span class="kn">import</span> <span class="n">custom_config</span>
+</span></span><span class="line"><span class="cl"><span class="n">base</span> <span class="o">=</span> <span class="n">custom_config</span><span class="p">[</span><span class="s1">&#39;base&#39;</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="n">preprocessing_output_dir</span> <span class="o">=</span> <span class="n">custom_config</span><span class="p">[</span><span class="s1">&#39;preprocessing_output_dir&#39;</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="n">network_training_output_dir_base</span> <span class="o">=</span> <span class="n">custom_config</span><span class="p">[</span><span class="s1">&#39;network_training_output_dir_base&#39;</span><span class="p">]</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="122-程序入口">1.2.2 程序入口
+</h3><p>位于 <em><strong>nnunetv2/run/run_training.py</strong></em> 文件中，这里nnUnet训练代码的入口。由于不是命令行调用方式，需要将parser.add_argument的传入参数修改，添加 “-” 并设置 default 值。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&#34;-network&#34;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;2d&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&#34;-network_trainer&#34;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;nnUNetTrainerV2&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&#34;-task&#34;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;666&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&#34;can be task name or task id&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&#34;-fold&#34;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;0, 1, ..., 5 or &#39;</span><span class="nb">all</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h1 id="二构建网络">二、构建网络
+</h1><h2 id="21-前置知识">2.1 前置知识
+</h2><p><strong>nnUnet</strong> 默认使用深监督，意味着自定义网络输出应为一个列表形式。然而，在网络推理时，我们只需要最高分辨率的输出，不需要多层次输出。在nnUnet官方实现中，使用 <strong>deep_supervision</strong> 参数控制是否多层次输出。综上所述，自定义网络需要满足两个条件：</p>
+<ul>
+<li>支持多层次输出</li>
+<li>使用变量deep_supervision控制输出类型</li>
+</ul>
+<h2 id="22-嵌入自定义网络">2.2 嵌入自定义网络
+</h2><h3 id="221-包装网络">2.2.1 包装网络
+</h3><p>这里提供一种对已有网络包装的方法，仅供参考</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">torch.nn</span> <span class="k">as</span> <span class="nn">nn</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">custom_net</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,):</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">super</span><span class="p">(</span><span class="n">custom_net</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">deep_supervision</span> <span class="o">=</span> <span class="kc">True</span>
+</span></span><span class="line"><span class="cl">        <span class="c1"># 使用你自己的网络</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="kc">None</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="n">output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">deep_supervision</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="k">return</span> <span class="p">[</span><span class="n">output</span><span class="p">,</span> <span class="p">]</span>
+</span></span><span class="line"><span class="cl">        <span class="k">else</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="k">return</span> <span class="n">output</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="222-嵌入主框架">2.2.2 嵌入主框架
+</h3><p>将自定义网络嵌套进主框架。打开文件 <strong>nnunetv2/training/nnUNetTrainer/nnUNetTrainer.py</strong></p>
+<p>替换函数 <strong>build_network_architecture</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">build_network_architecture</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">plans_manager</span><span class="p">:</span><span class="n">PlansManager</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                                   <span class="n">dataset_json</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                                   <span class="n">configuration_manager</span><span class="p">:</span><span class="n">ConfigurationManager</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                                   <span class="n">num_input_channels</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                                   <span class="n">enable_deep_supervision</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="kn">from</span> <span class="nn">dynamic_network_architectures.initialization.weight_init</span> <span class="kn">import</span> <span class="n">InitWeights_He</span>
+</span></span><span class="line"><span class="cl">        <span class="n">model</span> <span class="o">=</span> <span class="n">custom_net</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">        <span class="n">model</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">InitWeights_He</span><span class="p">(</span><span class="mf">1e-2</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">model</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h1 id="参考资料">参考资料
+</h1><p><a class="link" href="https://www.nature.com/articles/s41592-020-01008-z."  target="_blank" rel="noopener"
+    >[1] nnU-Net: a self-configuring method for deep learning-based biomedical image segmentation</a><br>
+<a class="link" href="https://github.com/MIC-DKFZ/nnUNet"  target="_blank" rel="noopener"
+    >[2] nnUnet</a></p>
+
 </section>
 
 

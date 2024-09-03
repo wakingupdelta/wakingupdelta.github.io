@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 <html lang="zh-cn" dir="ltr">
     <head><meta charset='utf-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="">
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="一、前言 本文提供一个简易的demo，用于对目标阵容的高亮显示，避免猪脑过载或慢速思考。基本流程由两部分组成 使用 tesseract 识别卡牌池名字，与目标阵容进">
 <title>云顶之弈 辅助高亮显示</title>
 
 <link rel='canonical' href='https://wakingupdelta.github.io/p/%E4%BA%91%E9%A1%B6%E4%B9%8B%E5%BC%88-%E8%BE%85%E5%8A%A9%E9%AB%98%E4%BA%AE%E6%98%BE%E7%A4%BA/'>
 
 <link rel="stylesheet" href="/scss/style.min.0304c6baf04e01a8fe70693791cb744d56a3578a3120a8796cefc66825aa39c7.css"><meta property='og:title' content="云顶之弈 辅助高亮显示">
-<meta property='og:description' content="">
+<meta property='og:description' content="一、前言 本文提供一个简易的demo，用于对目标阵容的高亮显示，避免猪脑过载或慢速思考。基本流程由两部分组成 使用 tesseract 识别卡牌池名字，与目标阵容进">
 <meta property='og:url' content='https://wakingupdelta.github.io/p/%E4%BA%91%E9%A1%B6%E4%B9%8B%E5%BC%88-%E8%BE%85%E5%8A%A9%E9%AB%98%E4%BA%AE%E6%98%BE%E7%A4%BA/'>
 <meta property='og:site_name' content='想起床的方差'>
-<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:published_time' content='2024-04-28T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2024-04-28T00:00:00&#43;00:00'/>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:published_time' content='2024-01-03T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2024-01-03T00:00:00&#43;00:00'/>
 <meta name="twitter:title" content="云顶之弈 辅助高亮显示">
-<meta name="twitter:description" content="">
+<meta name="twitter:description" content="一、前言 本文提供一个简易的demo，用于对目标阵容的高亮显示，避免猪脑过载或慢速思考。基本流程由两部分组成 使用 tesseract 识别卡牌池名字，与目标阵容进">
     <link rel="shortcut icon" href="/favicon.ico" />
 
   
@@ -191,7 +191,7 @@
   <path d="M3 11h16" />
   <path d="M18 16.496v1.504l1 1" />
 </svg>
-                <time class="article-time--published">2024-04-28</time>
+                <time class="article-time--published">2024-01-03</time>
             </div>
         
 
@@ -207,7 +207,240 @@
     <section class="article-content">
     
     
-    
+    <h1 id="一前言">一、前言
+</h1><p>本文提供一个简易的demo，用于对目标阵容的高亮显示，避免猪脑过载或慢速思考。基本流程由两部分组成</p>
+<ul>
+<li>使用 <strong>tesseract</strong> 识别卡牌池名字，与目标阵容进行比较，得到卡牌坐标</li>
+<li>基于坐标对卡牌高亮显示</li>
+</ul>
+<h1 id="二环境设置">二、环境设置
+</h1><p>博主是在 <strong>windows</strong> 上运行，搭配 <strong>Pycharm</strong> 使用，使用该教程需要进行以下设置：</p>
+<ol>
+<li>将英雄联盟客户端语言设置为 <strong>英文</strong></li>
+<li>游戏内设置分辨率为 <strong>1920*1080</strong>，<strong>无边框模式</strong></li>
+<li>windows桌面，右键-&gt;显示设置-&gt;缩放与布局-&gt;更改文本、应用等项目的大小-&gt;<strong>100%</strong></li>
+<li>通过参考资料 <a class="link" href="https://tesseract-ocr.github.io/tessdoc/Installation.html"  target="_blank" rel="noopener"
+    >[1]</a> 安装 <strong>tesseract</strong>，并配置到 <strong>系统环境变量</strong></li>
+<li>以 <strong>管理员</strong> 身份运行pycharm</li>
+</ol>
+<h1 id="三卡牌识别">三、卡牌识别
+</h1><h2 id="31-候选框截取">3.1 候选框截取
+</h2><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">pyscreenshot</span>                
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">ocr</span> <span class="kn">import</span> <span class="n">get_text_from_image</span>
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">pynput</span> <span class="kn">import</span> <span class="n">keyboard</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">takeScreenshotROI</span><span class="p">(</span><span class="n">coordinates</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># 根据坐标截图</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">pyscreenshot</span><span class="o">.</span><span class="n">grab</span><span class="p">(</span><span class="n">coordinates</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">get_champions</span><span class="p">():</span>
+</span></span><span class="line"><span class="cl">    <span class="n">width</span><span class="p">,</span> <span class="n">height</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1920</span><span class="p">,</span> <span class="mi">1080</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">left</span><span class="p">,</span> <span class="n">top</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">bottom</span> <span class="o">=</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">width</span> <span class="o">*</span> <span class="mf">0.25</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">height</span> <span class="o">*</span> <span class="mf">0.96</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">width</span> <span class="o">*</span> <span class="mf">0.77</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">height</span> <span class="o">*</span> <span class="mf">0.99</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">    <span class="n">_width</span> <span class="o">=</span> <span class="p">(</span><span class="n">right</span><span class="o">-</span><span class="n">left</span><span class="p">)</span><span class="o">/</span><span class="mi">5</span>
+</span></span><span class="line"><span class="cl">    <span class="n">champions_list</span> <span class="o">=</span> <span class="p">[]</span>
+</span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="n">coordinates</span> <span class="o">=</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">left</span> <span class="o">+</span> <span class="n">idx</span><span class="o">*</span><span class="n">_width</span><span class="p">)</span><span class="o">+</span><span class="mi">10</span><span class="p">,</span> <span class="n">top</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">left</span> <span class="o">+</span> <span class="p">(</span><span class="n">idx</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">_width</span><span class="p">)</span><span class="o">-</span><span class="mi">55</span><span class="p">,</span> <span class="n">bottom</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="c1"># 对卡牌池截图</span>
+</span></span><span class="line"><span class="cl">        <span class="n">roi_example</span> <span class="o">=</span> <span class="n">takeScreenshotROI</span><span class="p">(</span><span class="n">coordinates</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="c1"># 函数get_text_from_image对截图进行ocr识别</span>
+</span></span><span class="line"><span class="cl">        <span class="n">champion_name</span> <span class="o">=</span> <span class="n">get_text_from_image</span><span class="p">(</span><span class="n">roi_example</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="n">champions_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">champion_name</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">champions_list</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>计算左上和右下坐标 <em><strong>coordinates</strong></em>，后根据坐标截取屏幕。由于卡池共有五张牌，需要循环五次</p>
+<h2 id="32-ocr识别">3.2 ocr识别
+</h2><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">cv2</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">ImageGrab</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">pytesseract</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 转为灰度图</span>
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">image_grayscale</span><span class="p">(</span><span class="n">image</span><span class="p">:</span> <span class="n">ImageGrab</span><span class="o">.</span><span class="n">Image</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">cv2</span><span class="o">.</span><span class="n">cvtColor</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">COLOR_BGR2GRAY</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl"><span class="c1"># 阈值分割</span>
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">image_thresholding</span><span class="p">(</span><span class="n">image</span><span class="p">:</span> <span class="n">ImageGrab</span><span class="o">.</span><span class="n">Image</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">cv2</span><span class="o">.</span><span class="n">threshold</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">THRESH_BINARY_INV</span> <span class="o">+</span> <span class="n">cv2</span><span class="o">.</span><span class="n">THRESH_OTSU</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 转numpy</span>
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">image_array</span><span class="p">(</span><span class="n">image</span><span class="p">:</span> <span class="n">ImageGrab</span><span class="o">.</span><span class="n">Image</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;&#34;&#34;Turns the image into an array&#34;&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">image</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">image</span> <span class="o">=</span> <span class="n">image</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="p">:</span><span class="mi">3</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">image</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 调整尺寸</span>
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">image_resize</span><span class="p">(</span><span class="n">image</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">scale</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;&#34;&#34;Resizes the image using the scale passed in argument two&#34;&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">)</span> <span class="o">=</span> <span class="p">(</span><span class="n">image</span><span class="o">.</span><span class="n">width</span> <span class="o">*</span> <span class="n">scale</span><span class="p">,</span> <span class="n">image</span><span class="o">.</span><span class="n">height</span> <span class="o">*</span> <span class="n">scale</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">image</span><span class="o">.</span><span class="n">resize</span><span class="p">((</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl"><span class="c1"># 对卡牌池截图进行ocr识别</span>
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">get_text_from_image</span><span class="p">(</span><span class="n">image</span><span class="p">:</span> <span class="n">ImageGrab</span><span class="o">.</span><span class="n">Image</span><span class="p">,</span> <span class="n">whitelist</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&#34;&#34;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">resize</span> <span class="o">=</span> <span class="n">image_resize</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">array</span> <span class="o">=</span> <span class="n">image_array</span><span class="p">(</span><span class="n">resize</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">grayscale</span> <span class="o">=</span> <span class="n">image_grayscale</span><span class="p">(</span><span class="n">array</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">thresholding</span> <span class="o">=</span> <span class="n">image_thresholding</span><span class="p">(</span><span class="n">grayscale</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">pytesseract</span><span class="o">.</span><span class="n">image_to_string</span><span class="p">(</span><span class="n">thresholding</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;--psm 7 -c tessedit_char_whitelist=</span><span class="si">{</span><span class="n">whitelist</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>由 <strong>3.1候选框</strong> 截取到的图片将作为参数，传入函数 <em><strong>get_text_from_image</strong></em> 进行识别，得到卡牌名</p>
+<h1 id="四高亮显示">四、高亮显示
+</h1><p>基于第三章的函数，会得到现在卡牌池的名字列表，将该列表与目标阵容进行比较，得到需高亮位置的坐标，后使用 <strong>Pyqt5</strong> 显示</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">PyQt5.QtWidgets</span> <span class="kn">import</span> <span class="o">*</span>
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">PyQt5.QtGui</span> <span class="kn">import</span> <span class="o">*</span>
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">PyQt5.QtCore</span> <span class="kn">import</span> <span class="n">Qt</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">sys</span>
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">PyQt5</span> <span class="kn">import</span> <span class="n">QtCore</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">Window</span><span class="p">(</span><span class="n">QMainWindow</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">display_list</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">super</span><span class="p">(</span><span class="n">Window</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">QtCore</span><span class="o">.</span><span class="n">Qt</span><span class="o">.</span><span class="n">WindowStaysOnTopHint</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">setWindowFlag</span><span class="p">(</span><span class="n">Qt</span><span class="o">.</span><span class="n">FramelessWindowHint</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="s2">&#34;no title&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">setGeometry</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="mi">940</span><span class="p">,</span> <span class="mi">950</span><span class="p">,</span> <span class="mi">30</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        
+</span></span><span class="line"><span class="cl">        <span class="c1"># 卡牌池有四个位置，display_list表示需要标记recommen的卡牌</span>
+</span></span><span class="line"><span class="cl">        <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">display_list</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="bp">self</span><span class="o">.</span><span class="n">label</span> <span class="o">=</span> <span class="n">QLabel</span><span class="p">(</span><span class="s1">&#39;recommend&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="o">.</span><span class="n">setStyleSheet</span><span class="p">(</span><span class="s2">&#34;background-color: lightgreen; border: 3px solid green&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="o">.</span><span class="n">setGeometry</span><span class="p">(</span><span class="mi">200</span><span class="o">*</span><span class="n">idx</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">30</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">        
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">keyPressEvent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">e</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">key</span><span class="p">()</span> <span class="o">==</span> <span class="n">Qt</span><span class="o">.</span><span class="n">Key_D</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">            
+</span></span><span class="line"><span class="cl"><span class="n">App</span> <span class="o">=</span> <span class="n">QApplication</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">win1</span> <span class="o">=</span> <span class="n">Window</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+</span></span><span class="line"><span class="cl"><span class="n">App</span><span class="o">.</span><span class="n">exec</span><span class="p">()</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>效果预览</p>
+<p><img src="/p/%E4%BA%91%E9%A1%B6%E4%B9%8B%E5%BC%88-%E8%BE%85%E5%8A%A9%E9%AB%98%E4%BA%AE%E6%98%BE%E7%A4%BA/image-20240903143747782.png"
+	width="1127"
+	height="194"
+	srcset="/p/%E4%BA%91%E9%A1%B6%E4%B9%8B%E5%BC%88-%E8%BE%85%E5%8A%A9%E9%AB%98%E4%BA%AE%E6%98%BE%E7%A4%BA/image-20240903143747782_hue5f4aaf8cdee5fb403bd4dfcaf3b663b_289827_480x0_resize_box_3.png 480w, /p/%E4%BA%91%E9%A1%B6%E4%B9%8B%E5%BC%88-%E8%BE%85%E5%8A%A9%E9%AB%98%E4%BA%AE%E6%98%BE%E7%A4%BA/image-20240903143747782_hue5f4aaf8cdee5fb403bd4dfcaf3b663b_289827_1024x0_resize_box_3.png 1024w"
+	loading="lazy"
+	
+		alt="image-20240903143747782"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="580"
+		data-flex-basis="1394px"
+	
+></p>
+<h1 id="参考资料">参考资料
+</h1><p><a class="link" href="https://tesseract-ocr.github.io/tessdoc/Installation.html"  target="_blank" rel="noopener"
+    >[1] tesseract</a><br>
+<a class="link" href="https://github.com/jfd02/TFT-OCR-BOT"  target="_blank" rel="noopener"
+    >[2] TFT-OCR-BOT</a><br>
+<a class="link" href="https://github.com/Eikinel/TFT-Auto-Buy"  target="_blank" rel="noopener"
+    >[3] TFT-Auto-Buy</a><br>
+<a class="link" href="https://github.com/luxiaolan6373/tft_zynp"  target="_blank" rel="noopener"
+    >[4] tft_zynp</a></p>
+
 </section>
 
 
@@ -247,41 +480,6 @@
     
 
     
-
-<aside class="related-content--wrapper">
-    <h2 class="section-title">相关文章</h2>
-    <div class="related-content">
-        <div class="flex article-list--tile">
-            
-                
-<article class="">
-    <a href="/p/pyinstaller%E6%89%93%E5%8C%85pytorch%E4%BB%A3%E7%A0%81/">
-        
-        
-
-        <div class="article-details">
-            <h2 class="article-title">Pyinstaller打包pytorch代码</h2>
-        </div>
-    </a>
-</article>
-
-            
-                
-<article class="">
-    <a href="/p/ubuntu%E9%A9%B1%E5%8A%A8%E5%AE%89%E8%A3%85%E4%B8%80%E5%8F%91%E5%85%A5%E9%AD%82/">
-        
-        
-
-        <div class="article-details">
-            <h2 class="article-title">Ubuntu驱动安装，一发入魂</h2>
-        </div>
-    </a>
-</article>
-
-            
-        </div>
-    </div>
-</aside>
 
      
     

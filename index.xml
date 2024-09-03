@@ -13,7 +13,176 @@
         <pubDate>Wed, 26 Jun 2024 00:00:00 +0000</pubDate>
         
         <guid>https://wakingupdelta.github.io/p/completablefuture%E6%A6%82%E8%A7%88/</guid>
-        <description></description>
+        <description>&lt;h3 id=&#34;一线程池&#34;&gt;一、线程池
+&lt;/h3&gt;&lt;p&gt;核心参数&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;corePoolSize 核心线程池大小&lt;/li&gt;
+&lt;li&gt;maximumPoolSize 线程池能创建线程的最大数量&lt;/li&gt;
+&lt;li&gt;keepAliveTime 空闲线程存活时间&lt;/li&gt;
+&lt;li&gt;workQueue 阻塞队列&lt;/li&gt;
+&lt;li&gt;handler 饱和策略&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;execute方法提交任务后，执行逻辑&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;小于核心线程数，创建新线程&lt;/li&gt;
+&lt;li&gt;阻塞队列未满，入队&lt;/li&gt;
+&lt;li&gt;线程池未满，创建&lt;/li&gt;
+&lt;li&gt;按饱和策略处理&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;二对比future&#34;&gt;二、对比Future
+&lt;/h3&gt;&lt;p&gt;特点&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;支持回调通知
+&lt;ul&gt;
+&lt;li&gt;Future需不断轮询判断任务是否结束&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;便于将不同异步操作组合
+&lt;ul&gt;
+&lt;li&gt;Future编排回调存在回调地狱问题&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;三简单使用&#34;&gt;三、简单使用
+&lt;/h3&gt;&lt;h4 id=&#34;31-创建&#34;&gt;3.1 创建
+&lt;/h4&gt;&lt;p&gt;通过静态方法创建实例&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;runAsync 无返回值&lt;/li&gt;
+&lt;li&gt;supplyAsync 有返回值&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;n&#34;&gt;CompletableFuture&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;runAsync&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Runnable&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;CompletableFuture&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;runAsync&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Runnable&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Executor&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;CompletableFuture&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;supplyAsync&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Supplier&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;U&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;CompletableFuture&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;supplyAsync&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Supplier&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;U&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Executor&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h4 id=&#34;32-依赖单个任务&#34;&gt;3.2 依赖单个任务
+&lt;/h4&gt;&lt;h5 id=&#34;321-顺序执行&#34;&gt;3.2.1 顺序执行
+&lt;/h5&gt;&lt;ul&gt;
+&lt;li&gt;thenRun 无入参，无返回值&lt;/li&gt;
+&lt;li&gt;thenAccept 有入参，无返回值&lt;/li&gt;
+&lt;li&gt;thenApply 有入参，有返回值&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;n&#34;&gt;CompletableFuture&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;supplyAsync&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(()&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;o&#34;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;request&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;).&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;thenRun&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(()&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;o&#34;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;p&#34;&gt;{});&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;CompletableFuture&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;supplyAsync&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(()&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;o&#34;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;request&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;).&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;thenAccept&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;request&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;o&#34;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;p&#34;&gt;{});&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;CompletableFuture&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;supplyAsync&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(()&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;o&#34;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;request&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;).&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;thenRun&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;request&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;o&#34;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;print --&amp;gt; &amp;#34;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;o&#34;&gt;+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;request&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h5 id=&#34;322-异常处理&#34;&gt;3.2.2 异常处理
+&lt;/h5&gt;&lt;p&gt;两种方式 exceptionally 和 handle&lt;/p&gt;
+&lt;h4 id=&#34;33-依赖多个任务&#34;&gt;3.3 依赖多个任务
+&lt;/h4&gt;&lt;h5 id=&#34;331-and&#34;&gt;3.3.1 and
+&lt;/h5&gt;&lt;ul&gt;
+&lt;li&gt;thenAfterBoth 无入参，无返回&lt;/li&gt;
+&lt;li&gt;thenAcceptBoth 有入参，无返回&lt;/li&gt;
+&lt;li&gt;thenCombine 有入参，有返回&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;n&#34;&gt;cfA&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;runAfterBoth&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;cfB&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;o&#34;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;p&#34;&gt;{});&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;cfA&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;tehnAcceptBoth&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;cfB&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;A&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;B&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;o&#34;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;p&#34;&gt;{});&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;cfA&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;tehnAcceptBoth&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;cfB&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;A&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;B&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;o&#34;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;A&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;o&#34;&gt;+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;B&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;静态方法 allOf 等待多个任务都完成，无返回值&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;n&#34;&gt;CompletableFuture&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;allOf&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;cfA&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;cfB&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;cfC&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h5 id=&#34;332-or&#34;&gt;3.3.2 or
+&lt;/h5&gt;&lt;ul&gt;
+&lt;li&gt;runAfterEither 无入参，无返回&lt;/li&gt;
+&lt;li&gt;acceptEither 有入参，无返回&lt;/li&gt;
+&lt;li&gt;applyToEither 有入参，有返回&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;n&#34;&gt;cfA&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;runAfterEither&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;cfB&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;o&#34;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;p&#34;&gt;{});&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;cfA&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;tehnAcceptEither&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;cfB&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;req&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;o&#34;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;p&#34;&gt;{});&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;cfA&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;tehnAcceptEither&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;cfB&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;req&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;o&#34;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;req: &amp;#34;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;o&#34;&gt;+&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;req&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;静态方法 anyOf 等待任一任务完成，返回类型为Object&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;n&#34;&gt;CompletableFuture&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;anyOf&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;cfA&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;cfB&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;cfC&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h3 id=&#34;四基本原理&#34;&gt;四、基本原理
+&lt;/h3&gt;&lt;p&gt;CompletableFuture 有两个核心字段&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;result 存当前CompletableFuture的结果&lt;/li&gt;
+&lt;li&gt;Completion 存依赖动作&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;不同CompletableFuture 如何编排起来？&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;CompletableFuture 为 被观察者，Completion为 观察者&lt;/li&gt;
+&lt;li&gt;当CompletableFuture完成后，通过postComplete方法通知Completion&lt;/li&gt;
+&lt;li&gt;形象上讲，这种机制 在 不同CompletableFuture节点 间 添加了 边&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;五注意事项&#34;&gt;五、注意事项
+&lt;/h3&gt;&lt;h4 id=&#34;51-有无async后缀&#34;&gt;5.1 有无Async后缀
+&lt;/h4&gt;&lt;p&gt;不带Async后缀的方法&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;如果注册时被依赖的操作已经执行完成，则由当前线程执行&lt;/li&gt;
+&lt;li&gt;如果注册时被依赖的操作还未执行完，则由回调线程执行&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;带Async后缀的方法&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;运行在指定线程池Executor&lt;/li&gt;
+&lt;li&gt;当不传递Executor时，会使用ForkJoinPool中的共用线程池CommonPool&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;52-thencompose&#34;&gt;5.2 thenCompose
+&lt;/h4&gt;&lt;p&gt;和thenCombine对比&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;都是聚合任务&lt;/li&gt;
+&lt;li&gt;combine聚合结果，compose把多个cf实例组合成一个整体&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;和thenApply对比&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;thenApply接收的函数返回一个具体的值，thenCompose接收的函数返回一个新的cf实例&lt;/li&gt;
+&lt;li&gt;thenApply是同步，thenCompose是异步&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;参考资料&#34;&gt;参考资料
+&lt;/h3&gt;&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;https://javadoop.com/post/completable-future&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;[1] CompletableFuture使用介绍&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;https://tech.meituan.com/2022/05/12/principles-and-practices-of-completablefuture.html&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;[2] CompletableFuture原理与实践&lt;/a&gt;&lt;/p&gt;
+</description>
         </item>
         <item>
         <title>javaweb概览</title>
@@ -21,7 +190,139 @@
         <pubDate>Thu, 06 Jun 2024 00:00:00 +0000</pubDate>
         
         <guid>https://wakingupdelta.github.io/p/javaweb%E6%A6%82%E8%A7%88/</guid>
-        <description></description>
+        <description>&lt;h3 id=&#34;一servlet&#34;&gt;一、Servlet
+&lt;/h3&gt;&lt;p&gt;Servlet是一套规范&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;后端 遵守 规范 编写 小程序&lt;/li&gt;
+&lt;li&gt;web服务器 遵守 规范 调用 小程序
+&lt;ul&gt;
+&lt;li&gt;模拟流程
+&lt;ul&gt;
+&lt;li&gt;实例化Servlet、ServletRequest、ServletResponse&lt;/li&gt;
+&lt;li&gt;调用Servlet的service方法，ServletRequest、ServletResponse为入参&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;常见接口&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;init 第一次请求 或 容器启动 调用&lt;/li&gt;
+&lt;li&gt;destroy 容器关闭 调用&lt;/li&gt;
+&lt;li&gt;service 每次请求调用&lt;/li&gt;
+&lt;li&gt;getServletConfig
+&lt;ul&gt;
+&lt;li&gt;一个Servlet对应一个ServletConfig&lt;/li&gt;
+&lt;li&gt;多个Servlet对应一个ServletContext&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;请求转发&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;服务器内部行为、地址栏不变&lt;/li&gt;
+&lt;li&gt;调用新Servlet的service方法&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;重定向&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;客户端重新发请求、地址栏变化&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;会话管理&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;会话 &amp;ndash; 一个客户端的多次请求&lt;/li&gt;
+&lt;li&gt;session 服务端
+&lt;ul&gt;
+&lt;li&gt;request.getSession
+&lt;ul&gt;
+&lt;li&gt;无cookie新建HttpSession，JSESSIONID以cookie形式写入HttpServletResponse中&lt;/li&gt;
+&lt;li&gt;有则查&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;cookie 客户端 浏览器发请求时携带&lt;/li&gt;
+&lt;li&gt;简单的登录校验
+&lt;ul&gt;
+&lt;li&gt;查session是否存key为user，有则表示登录成功，可执行业务逻辑&lt;/li&gt;
+&lt;li&gt;无则重定向至登录页面，查数据库验证账号和密码，正确则往session中存入user&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;域对象&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;请求域 HttpServletRequest
+&lt;ul&gt;
+&lt;li&gt;数据只存在 该次请求中&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;会话域 HttpSession
+&lt;ul&gt;
+&lt;li&gt;数据存全局，但只有携带正确JSESSIONID的请求能访问&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;应用域 ServletContext
+&lt;ul&gt;
+&lt;li&gt;数据存全局&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;二filter&#34;&gt;二、Filter
+&lt;/h3&gt;&lt;p&gt;一个规范，常见接口&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;init 初始化方法，容器调用传入配置信息&lt;/li&gt;
+&lt;li&gt;doFilter 过滤方法，实现Servlet执行前、后的逻辑
+&lt;ul&gt;
+&lt;li&gt;入参ServletRequest、ServletResponse、FilterChain&lt;/li&gt;
+&lt;li&gt;FilterChain.doFilter(request, response) 放行请求，继续执行下一个Filter？
+&lt;ul&gt;
+&lt;li&gt;FilterChain 粗浅理解、责任链设计模式
+&lt;ul&gt;
+&lt;li&gt;Filter数组，存放Filter穿起来的链&lt;/li&gt;
+&lt;li&gt;下标指针，表示当前执行到哪个Filter&lt;/li&gt;
+&lt;li&gt;doFilter方法
+&lt;ul&gt;
+&lt;li&gt;判断指针位置，执行完毕，调用Servlet的service方法&lt;/li&gt;
+&lt;li&gt;否则，取出Filter，调用Filter的doFilter方法，入参为request、response、this
+&lt;ul&gt;
+&lt;li&gt;在执行下一个Filter的doFilter方法时，this.doFilter可能会被调用，较为复杂的递归&lt;/li&gt;
+&lt;li&gt;基于这种递归实现，可以使得多个Filter分层次将Servlet抱起来，优先级最高的Filter，在业务逻辑前最先执行，在业务逻辑后最后执行&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;destroy 销毁方法，容器回收过滤器对象前调用&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;三listener&#34;&gt;三、Listener
+&lt;/h3&gt;&lt;p&gt;观察者模式&lt;/p&gt;
+&lt;p&gt;分类&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;监听对象划分
+&lt;ul&gt;
+&lt;li&gt;request、session、application&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;监听事件划分 对应不同的接口方法
+&lt;ul&gt;
+&lt;li&gt;对象创建和销毁&lt;/li&gt;
+&lt;li&gt;数据更新&lt;/li&gt;
+&lt;li&gt;其他
+&lt;ul&gt;
+&lt;li&gt;HttpSessionBindingListener 监听 Listener 在 session域中的增加、移除&lt;/li&gt;
+&lt;li&gt;HttpSessionActivationListener 钝化监听器，监听某个对象在session中序列化、反序列化&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;四ajax&#34;&gt;四、AJAX
+&lt;/h3&gt;&lt;p&gt;Asynchronous JavaScript and XML&lt;/p&gt;
+&lt;p&gt;简单理解，js代码异步发送http请求，请求收到后回调函数执行，渲染xml页面&lt;/p&gt;
+</description>
         </item>
         <item>
         <title>注意力机制概览</title>
@@ -29,7 +330,142 @@
         <pubDate>Sun, 12 May 2024 00:00:00 +0000</pubDate>
         
         <guid>https://wakingupdelta.github.io/p/%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B6%E6%A6%82%E8%A7%88/</guid>
-        <description></description>
+        <description>&lt;h1 id=&#34;一背景&#34;&gt;一、背景
+&lt;/h1&gt;&lt;p&gt;注意力机制可有效提高模型对特征的提取能力，进而提高模型精度。本文首先对经典的三种注意力学习方法进行介绍，后结合自己一点点浅薄认知，对注意力机制后续的改进方向进行归纳，希望对大家能有帮助&lt;/p&gt;
+&lt;h1 id=&#34;二前置知识&#34;&gt;二、前置知识
+&lt;/h1&gt;&lt;h2 id=&#34;21-通道注意力&#34;&gt;2.1 通道注意力
+&lt;/h2&gt;&lt;img src=&#34;image-20240903143439161.png&#34; alt=&#34;image-20240903143439161&#34; style=&#34;zoom:67%;&#34; /&gt;
+对特征图进行全局平均池化，后经过两层全连接层，最后使用Sigmoid输出0-1之间的权重
+&lt;h2 id=&#34;22-空间注意力&#34;&gt;2.2 空间注意力
+&lt;/h2&gt;&lt;img src=&#34;image-20240903143451755.png&#34; alt=&#34;image-20240903143451755&#34; style=&#34;zoom:67%;&#34; /&gt;
+将特征图进行压缩，得到空间方向上的权重图
+&lt;h2 id=&#34;23-self-attention&#34;&gt;2.3 self-attention
+&lt;/h2&gt;&lt;img src=&#34;image-20240903143502737.png&#34; alt=&#34;image-20240903143502737&#34; style=&#34;zoom:67%;&#34; /&gt;
+&lt;p&gt;这里借助了Non-local Neural Networks中的一张图。self-attention本质上是一种空间注意机制，如上图所示，需要求解一个[THW, THW]的矩阵，该矩阵中的每一行，表示原特征图中的一点与其余点的关系&lt;/p&gt;
+&lt;h1 id=&#34;三各种改进版本&#34;&gt;三、各种改进版本
+&lt;/h1&gt;&lt;p&gt;将改进的注意力机制主要分为四类&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;跨特征：构建不同的特征表达，后进行融合&lt;/li&gt;
+&lt;li&gt;分组：对特征图按通道分组后，再使用注意力机制&lt;/li&gt;
+&lt;li&gt;self-attention：本质上，self-attention就是一系列矩阵运算，对运算过程中的某些步骤进行优化&lt;/li&gt;
+&lt;li&gt;空间+通道：很自然的想法，同时使用两种注意力机制&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;31-跨特征&#34;&gt;3.1 跨特征
+&lt;/h2&gt;&lt;h4 id=&#34;311-bisenet&#34;&gt;3.1.1 BiSeNet
+&lt;/h4&gt;&lt;img src=&#34;image-20240903143515154.png&#34; alt=&#34;image-20240903143515154&#34; style=&#34;zoom:67%;&#34; /&gt;
+对不同层次的特征使用通道注意力机制进行融合。这应该属于应用创新，没有构建新的注意力机制，而是将老的注意力机制应用到特征融合方向
+&lt;h4 id=&#34;312-sknet&#34;&gt;3.1.2 SKNet
+&lt;/h4&gt;&lt;p&gt;&lt;img src=&#34;https://wakingupdelta.github.io/p/%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B6%E6%A6%82%E8%A7%88/image-20240903143528059.png&#34;
+	width=&#34;1257&#34;
+	height=&#34;359&#34;
+	srcset=&#34;https://wakingupdelta.github.io/p/%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B6%E6%A6%82%E8%A7%88/image-20240903143528059_hu4188395624d6c6de293fd145c8a93efd_185865_480x0_resize_box_3.png 480w, https://wakingupdelta.github.io/p/%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B6%E6%A6%82%E8%A7%88/image-20240903143528059_hu4188395624d6c6de293fd145c8a93efd_185865_1024x0_resize_box_3.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;image-20240903143528059&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;350&#34;
+		data-flex-basis=&#34;840px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;使用不同感受野卷积核构建多分支特征，将这些特征 add 后计算不同分支的同道注意力系数，后沿着通道方向进行加权求和&lt;/p&gt;
+&lt;h2 id=&#34;32-分组&#34;&gt;3.2 分组
+&lt;/h2&gt;&lt;h3 id=&#34;321-sgnet&#34;&gt;3.2.1 SGNet
+&lt;/h3&gt;&lt;p&gt;&lt;img src=&#34;https://wakingupdelta.github.io/p/%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B6%E6%A6%82%E8%A7%88/image-20240903143537682.png&#34;
+	width=&#34;1252&#34;
+	height=&#34;426&#34;
+	srcset=&#34;https://wakingupdelta.github.io/p/%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B6%E6%A6%82%E8%A7%88/image-20240903143537682_hud065ca2fd1dda1682e5e65c580ff9f53_319318_480x0_resize_box_3.png 480w, https://wakingupdelta.github.io/p/%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B6%E6%A6%82%E8%A7%88/image-20240903143537682_hud065ca2fd1dda1682e5e65c580ff9f53_319318_1024x0_resize_box_3.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;image-20240903143537682&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;293&#34;
+		data-flex-basis=&#34;705px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;对每个组，先计算向量x的平均值（全局平均池化），后将利用该向量对特征图沿着通道 方向加权求和得到 空间注意力，再归一化，后经sigmoid函数输出&lt;/p&gt;
+&lt;h3 id=&#34;322-sanet&#34;&gt;3.2.2 SANet
+&lt;/h3&gt;&lt;p&gt;&lt;img src=&#34;https://wakingupdelta.github.io/p/%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B6%E6%A6%82%E8%A7%88/image-20240903143548571.png&#34;
+	width=&#34;1256&#34;
+	height=&#34;347&#34;
+	srcset=&#34;https://wakingupdelta.github.io/p/%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B6%E6%A6%82%E8%A7%88/image-20240903143548571_hube3e2276944c2386941e589284b66220_149550_480x0_resize_box_3.png 480w, https://wakingupdelta.github.io/p/%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B6%E6%A6%82%E8%A7%88/image-20240903143548571_hube3e2276944c2386941e589284b66220_149550_1024x0_resize_box_3.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;image-20240903143548571&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;361&#34;
+		data-flex-basis=&#34;868px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;将特征沿着通道分组，对每一组，再分成 空间注意力 和 通道注意力。对空间注意力，使用Group normalization实现。将分组结果进行拼接，后使用类似ShufflfleNet v2的方法进行channel shuffle&lt;/p&gt;
+&lt;h2 id=&#34;33-self-attention&#34;&gt;3.3 Self Attention
+&lt;/h2&gt;&lt;h3 id=&#34;331-non-local-attention&#34;&gt;3.3.1 non local attention
+&lt;/h3&gt;&lt;img src=&#34;image-20240903143603023.png&#34; alt=&#34;image-20240903143603023&#34; style=&#34;zoom:67%;&#34; /&gt;
+&lt;p&gt;定义了不同形式计算向量相似性的函数，提出self attention是non local attention 的特例&lt;/p&gt;
+&lt;h3 id=&#34;332-gcnet&#34;&gt;3.3.2 GCNet
+&lt;/h3&gt;&lt;p&gt;&lt;img src=&#34;https://wakingupdelta.github.io/p/%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B6%E6%A6%82%E8%A7%88/image-20240903143615249.png&#34;
+	width=&#34;1260&#34;
+	height=&#34;424&#34;
+	srcset=&#34;https://wakingupdelta.github.io/p/%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B6%E6%A6%82%E8%A7%88/image-20240903143615249_hu1aa83e91a93954a70623cd5a573c4860_237508_480x0_resize_box_3.png 480w, https://wakingupdelta.github.io/p/%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B6%E6%A6%82%E8%A7%88/image-20240903143615249_hu1aa83e91a93954a70623cd5a573c4860_237508_1024x0_resize_box_3.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;image-20240903143615249&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;297&#34;
+		data-flex-basis=&#34;713px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;指出non local attention不同位置的attention map基本一致，只计算Cx1x1的特征图&lt;/p&gt;
+&lt;h3 id=&#34;333-dual-attention&#34;&gt;3.3.3 dual attention
+&lt;/h3&gt;&lt;img src=&#34;image-20240903143636442.png&#34; alt=&#34;image-20240903143636442&#34; style=&#34;zoom: 50%;&#34; /&gt;
+&lt;p&gt;并联non local attention 和 GCnet&lt;/p&gt;
+&lt;h2 id=&#34;34-空间通道&#34;&gt;3.4 空间+通道
+&lt;/h2&gt;&lt;h3 id=&#34;341-bam&#34;&gt;3.4.1 BAM
+&lt;/h3&gt;&lt;p&gt;&lt;img src=&#34;https://wakingupdelta.github.io/p/%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B6%E6%A6%82%E8%A7%88/image-20240903143651005.png&#34;
+	width=&#34;1259&#34;
+	height=&#34;445&#34;
+	srcset=&#34;https://wakingupdelta.github.io/p/%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B6%E6%A6%82%E8%A7%88/image-20240903143651005_hu64b85001a552aa50dce13d8f55530e40_190059_480x0_resize_box_3.png 480w, https://wakingupdelta.github.io/p/%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B6%E6%A6%82%E8%A7%88/image-20240903143651005_hu64b85001a552aa50dce13d8f55530e40_190059_1024x0_resize_box_3.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;image-20240903143651005&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;282&#34;
+		data-flex-basis=&#34;679px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;并联，attention map先相加（利用了广播机制），后与原特征图相乘&lt;/p&gt;
+&lt;h3 id=&#34;342-scse&#34;&gt;3.4.2 scSE
+&lt;/h3&gt;&lt;img src=&#34;image-20240903143703961.png&#34; alt=&#34;image-20240903143703961&#34; style=&#34;zoom:50%;&#34; /&gt;
+&lt;p&gt;并联，attention map先各自相乘，后取最大值得到最终输出&lt;/p&gt;
+&lt;h1 id=&#34;参考文献&#34;&gt;参考文献
+&lt;/h1&gt;&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;https://openaccess.thecvf.com/content_ECCV_2018/papers/Changqian_Yu_BiSeNet_Bilateral_Segmentation_ECCV_2018_paper.pdf&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;[1] BiSeNet: Bilateral Segmentation Network for Real-time Semantic Segmentation&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;https://openaccess.thecvf.com/content_CVPR_2019/papers/Li_Selective_Kernel_Networks_CVPR_2019_paper.pdf&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;[2] Selective Kernel Networks&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;https://arxiv.org/pdf/1905.09646.pdf&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;[3] Spatial Group-wise Enhance: Improving Semantic Feature Learning in Convolutional Networks&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;https://arxiv.org/pdf/2102.00240.pdf&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;[4] SA-NET: SHUFFLE ATTENTION FOR DEEP CONVOLUTIONAL NEURAL NETWORKS&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;https://openaccess.thecvf.com/content_cvpr_2018/papers/Wang_Non-Local_Neural_Networks_CVPR_2018_paper.pdf&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;[5] Non-local Neural Networks&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;https://openaccess.thecvf.com/content_ICCVW_2019/papers/NeurArch/Cao_GCNet_Non-Local_Networks_Meet_Squeeze-Excitation_Networks_and_Beyond_ICCVW_2019_paper.pdf&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;[6] GCNet: Non-local Networks Meet Squeeze-Excitation Networks and Beyond&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;https://openaccess.thecvf.com/content_CVPR_2019/papers/Fu_Dual_Attention_Network_for_Scene_Segmentation_CVPR_2019_paper.pdf&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;[7] Dual Attention Network for Scene Segmentation&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;https://arxiv.org/pdf/1807.06514.pdf&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;[8] BAM: Bottleneck Attention Module&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;https://arxiv.org/pdf/1808.08127.pdf&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;[9] Recalibrating Fully Convolutional Networks with Spatial and Channel ‘Squeeze &amp;amp; Excitation’ Blocks&lt;/a&gt;&lt;/p&gt;
+</description>
         </item>
         <item>
         <title>基于一致性的半监督学习</title>
@@ -37,26 +473,64 @@
         <pubDate>Wed, 01 May 2024 00:00:00 +0000</pubDate>
         
         <guid>https://wakingupdelta.github.io/p/%E5%9F%BA%E4%BA%8E%E4%B8%80%E8%87%B4%E6%80%A7%E7%9A%84%E5%8D%8A%E7%9B%91%E7%9D%A3%E5%AD%A6%E4%B9%A0/</guid>
-        <description></description>
+        <description>&lt;h1 id=&#34;一背景&#34;&gt;一、背景
+&lt;/h1&gt;&lt;p&gt;医学图像的标注成本十分高昂，其标注数据规模往往较小。通过半监督学习的方法，利用大量的未标注数据，可有效提高模型的学习能力&lt;/p&gt;
+&lt;h1 id=&#34;二基本分类&#34;&gt;二、基本分类
+&lt;/h1&gt;&lt;img src=&#34;image-20240903143111694.png&#34; alt=&#34;image-20240903143111694&#34; style=&#34;zoom: 50%;&#34; /&gt;
+&lt;p&gt;如上图所示，仅有正方形的数据点，无法学习真实的数据分布，通过引入大量的未标注的圆形点，可得知数据的真实情况，这便是半监督学习的基本原理。&lt;/p&gt;
+&lt;p&gt;对于有标注的输入样本，因为有标签作为监督信号，所以很自然可以定义损失函数。对于未标注样本，需要自行构建监督信号。基本可分为两大类，一类是熵最小化约束，使模型趋向于得出高置信度的预测结果，另一类则是一致性约束，对输入或模型添加各种干扰，但模型依然具有稳定的输出。一致性约束是本文的重点，简单来说，就是通过各种奇技淫巧，使得模型对一个输入，具有不同的输出，然后让两个输出趋向一致，这就能构建出监督信号&lt;/p&gt;
+&lt;h1 id=&#34;三一致性约束&#34;&gt;三、一致性约束
+&lt;/h1&gt;&lt;h2 id=&#34;31-基本架构&#34;&gt;3.1 基本架构
+&lt;/h2&gt;&lt;h3 id=&#34;311-mean-teacher&#34;&gt;3.1.1 mean teacher
+&lt;/h3&gt;&lt;img src=&#34;image-20240903143141868.png&#34; alt=&#34;image-20240903143141868&#34; style=&#34;zoom: 67%;&#34; /&gt;
+Mean Teacher模型是经典的半监督方法，学生模型通过EMA方法更新参数，然后约束教师模型和学生模型之间的一致性
+&lt;h3 id=&#34;312-多个子模型&#34;&gt;3.1.2 多个子模型
+&lt;/h3&gt;&lt;img src=&#34;image-20240903143200747.png&#34; alt=&#34;image-20240903143200747&#34; style=&#34;zoom:80%;&#34; /&gt;
+直接构建两个独立的子模型，一个是卷积架构，另一个是transformer架构
+&lt;h3 id=&#34;313-多个解码器&#34;&gt;3.1.3 多个解码器
+&lt;/h3&gt;&lt;img src=&#34;image-20240903143221906.png&#34; alt=&#34;image-20240903143221906&#34; style=&#34;zoom: 67%;&#34; /&gt;
+&lt;p&gt;多个解码器&lt;/p&gt;
+&lt;h3 id=&#34;314-多尺度&#34;&gt;3.1.4 多尺度
+&lt;/h3&gt;&lt;img src=&#34;image-20240903143240369.png&#34; alt=&#34;image-20240903143240369&#34; style=&#34;zoom: 67%;&#34; /&gt;
+使得解码器的不同层次输出保持一致性
+&lt;h2 id=&#34;32-技巧&#34;&gt;3.2 技巧
+&lt;/h2&gt;&lt;p&gt;基本架构应该就是上述的模型，后面就是使用各种技巧去提高模型的性能&lt;/p&gt;
+&lt;h3 id=&#34;321-不确定性&#34;&gt;3.2.1 不确定性
+&lt;/h3&gt;&lt;img src=&#34;image-20240903143300654.png&#34; alt=&#34;image-20240903143300654&#34; style=&#34;zoom:67%;&#34; /&gt;
+&lt;p&gt;两输出中肯定存在某些区域更重要，通过不确定性对其加权&lt;/p&gt;
+&lt;h3 id=&#34;322-损失函数&#34;&gt;3.2.2 损失函数
+&lt;/h3&gt;&lt;img src=&#34;image-20240903143315908.png&#34; alt=&#34;image-20240903143315908&#34; style=&#34;zoom:67%;&#34; /&gt;
+&lt;p&gt;类似知识蒸馏的方法，对输出取softmax操作时，添加温度参数T，使得具有更多信息，再去保持一致性。&lt;/p&gt;
+&lt;h1 id=&#34;参考文献&#34;&gt;参考文献
+&lt;/h1&gt;&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;https://proceedings.neurips.cc/paper/2017/file/68053af2923e00204c3ca7c6a3150cf7-Paper.pdf&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;[1] Mean teachers are better role models: Weight-averaged consistency targets improve semi-supervised deep learning results&lt;/a&gt;&lt;br&gt;
+&lt;a class=&#34;link&#34; href=&#34;https://proceedings.mlr.press/v172/luo22b/luo22b.pdf&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;[2] Semi-Supervised Medical Image Segmentation via Cross Teaching between CNN and Transformer&lt;/a&gt;&lt;br&gt;
+&lt;a class=&#34;link&#34; href=&#34;https://openaccess.thecvf.com/content_CVPR_2020/papers/Ouali_Semi-Supervised_Semantic_Segmentation_With_Cross-Consistency_Training_CVPR_2020_paper.pdf&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;[3] Semi-Supervised Semantic Segmentation with Cross-Consistency Training&lt;/a&gt;&lt;br&gt;
+&lt;a class=&#34;link&#34; href=&#34;https://arxiv.org/pdf/2012.07042.pdf&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;[4] Efficient Semi-Supervised Gross Target Volume of Nasopharyngeal Carcinoma Segmentation via Uncertainty Rectified Pyramid Consistency&lt;/a&gt;&lt;br&gt;
+&lt;a class=&#34;link&#34; href=&#34;https://arxiv.org/pdf/1907.07034.pdf&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;[5] Uncertainty-aware Self-ensembling Model for Semi-supervised 3D Left Atrium Segmentation&lt;/a&gt;&lt;br&gt;
+&lt;a class=&#34;link&#34; href=&#34;https://arxiv.org/pdf/2109.09960.pdf&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;[6] Mutual Consistency Learning for Semi-supervised Medical Image Segmentation&lt;/a&gt;&lt;/p&gt;
+</description>
         </item>
         <item>
-        <title>Pyinstaller打包pytorch代码</title>
-        <link>https://wakingupdelta.github.io/p/pyinstaller%E6%89%93%E5%8C%85pytorch%E4%BB%A3%E7%A0%81/</link>
+        <title>改造nnUnet，嵌入第三方网络</title>
+        <link>https://wakingupdelta.github.io/p/%E6%94%B9%E9%80%A0nnunet%E5%B5%8C%E5%85%A5%E7%AC%AC%E4%B8%89%E6%96%B9%E7%BD%91%E7%BB%9C/</link>
         <pubDate>Sun, 28 Apr 2024 00:00:00 +0000</pubDate>
         
-        <guid>https://wakingupdelta.github.io/p/pyinstaller%E6%89%93%E5%8C%85pytorch%E4%BB%A3%E7%A0%81/</guid>
+        <guid>https://wakingupdelta.github.io/p/%E6%94%B9%E9%80%A0nnunet%E5%B5%8C%E5%85%A5%E7%AC%AC%E4%B8%89%E6%96%B9%E7%BD%91%E7%BB%9C/</guid>
         <description>&lt;h1 id=&#34;引言&#34;&gt;引言
-&lt;/h1&gt;&lt;p&gt;第一次尝试用 &lt;strong&gt;Pyinstaller&lt;/strong&gt; 打包 &lt;strong&gt;pytorch&lt;/strong&gt; 代码，碰见了很多问题，也耗费了许多时间！想把这个过程中碰到的问题与解决方法记录一下，方便后来者&lt;/p&gt;
-&lt;h1 id=&#34;一开箱使用&#34;&gt;一、开箱使用
-&lt;/h1&gt;&lt;h2 id=&#34;11-基本流程&#34;&gt;1.1 基本流程
-&lt;/h2&gt;&lt;p&gt;在 &lt;strong&gt;windows&lt;/strong&gt; 平台上，打包 &lt;strong&gt;pytorch&lt;/strong&gt; 代码的基本流程如下：&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;环境配置与测试&lt;/li&gt;
-&lt;li&gt;打包与本地调试&lt;/li&gt;
-&lt;li&gt;生产环境部署与测试&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id=&#34;12-环境配置与测试&#34;&gt;1.2 环境配置与测试
-&lt;/h2&gt;&lt;p&gt;在 &lt;strong&gt;Pycharm&lt;/strong&gt; 打开项目，点击 &lt;strong&gt;Terminal&lt;/strong&gt;，输入命令 &lt;code&gt;pip install pyinstaller&lt;/code&gt;，安装打包框架&lt;strong&gt;Pyinstaller&lt;/strong&gt;，后编写测试文件  &lt;em&gt;&lt;strong&gt;hello.py&lt;/strong&gt;&lt;/em&gt;:&lt;/p&gt;
+&lt;/h1&gt;&lt;p&gt;&lt;strong&gt;nnUnet&lt;/strong&gt; 是有监督的医学图像分割绕不开的话题，其卓越的性能和简易的方法，为相关研究者提供了一项强有力的工具。然而，由于高度封装性，在原先代码中嵌入自定义网络进行训练，并不是十分方便，本文旨在分享一点在使用 &lt;strong&gt;nnUnet&lt;/strong&gt; 训练自定义网络过程中的一点经验，可能存在纰漏，欢迎在讨论区交流！&lt;/p&gt;
+&lt;h1 id=&#34;一配置环境&#34;&gt;一、配置环境
+&lt;/h1&gt;&lt;h2 id=&#34;11-硬件需求&#34;&gt;1.1 硬件需求
+&lt;/h2&gt;&lt;p&gt;&lt;strong&gt;nnUnet&lt;/strong&gt; 的建议环境是Linux，若使用Windows，需修改路径相关代码（斜杠和反斜杠的替换），很麻烦（不推荐）。博主是在Ubuntu环境中使用Pycharm进行 &lt;strong&gt;nnUnet&lt;/strong&gt; 的学习&lt;/p&gt;
+&lt;h2 id=&#34;12-软件需求&#34;&gt;1.2 软件需求
+&lt;/h2&gt;&lt;p&gt;&lt;strong&gt;nnUnet&lt;/strong&gt; 官方推荐的使用方法是在命令行，但这不方便初学者学习。为了使用Pycharm的调试功能，需修改两个文件的代码 &lt;em&gt;&lt;strong&gt;nnunetv2/paths.py&lt;/strong&gt;&lt;/em&gt; 和 &lt;em&gt;&lt;strong&gt;nnunetv2/run/run_training.py&lt;/strong&gt;&lt;/em&gt;&lt;/p&gt;
+&lt;h3 id=&#34;121-数据集路径&#34;&gt;1.2.1 数据集路径
+&lt;/h3&gt;&lt;p&gt;位于 &lt;em&gt;&lt;strong&gt;nnunetv2/paths.py&lt;/strong&gt;&lt;/em&gt; 文件中，将三个变量路径修改为自己的路径。&lt;strong&gt;custom_&lt;/strong&gt; 是博主自己定义的文件，大家可以随意实现&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
 &lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
 &lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
@@ -65,79 +539,357 @@
 &lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
 &lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
 &lt;td class=&#34;lntd&#34;&gt;
-&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;k&#34;&gt;if&lt;/span&gt;  &lt;span class=&#34;vm&#34;&gt;__name__&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;==&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;__main__&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;nb&#34;&gt;print&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;Hello World!&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;k&#34;&gt;while&lt;/span&gt; &lt;span class=&#34;kc&#34;&gt;True&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;k&#34;&gt;pass&lt;/span&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;kn&#34;&gt;from&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;custom_&lt;/span&gt; &lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;custom_config&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;n&#34;&gt;base&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;custom_config&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;base&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;n&#34;&gt;preprocessing_output_dir&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;custom_config&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;preprocessing_output_dir&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;n&#34;&gt;network_training_output_dir_base&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;custom_config&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;network_training_output_dir_base&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
-&lt;/div&gt;&lt;p&gt;需确保 &lt;strong&gt;Terminal&lt;/strong&gt; 路径为项目根目录，执行 &lt;code&gt;pyinstaller -F hello.py&lt;/code&gt; 开始打包！在文件夹 &lt;strong&gt;dist&lt;/strong&gt; 中找到 &lt;strong&gt;hello.exe&lt;/strong&gt; 程序，若运行通过，说明环境配置成功&lt;/p&gt;
-&lt;h2 id=&#34;13-打包与本地调试&#34;&gt;1.3 打包与本地调试
-&lt;/h2&gt;&lt;p&gt;实际的项目一般是多文件，打包过程较复杂，需把握两个核心要素：&lt;/p&gt;
+&lt;/div&gt;&lt;h3 id=&#34;122-程序入口&#34;&gt;1.2.2 程序入口
+&lt;/h3&gt;&lt;p&gt;位于 &lt;em&gt;&lt;strong&gt;nnunetv2/run/run_training.py&lt;/strong&gt;&lt;/em&gt; 文件中，这里nnUnet训练代码的入口。由于不是命令行调用方式，需要将parser.add_argument的传入参数修改，添加 “-” 并设置 default 值。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;n&#34;&gt;parser&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;argparse&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;ArgumentParser&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;n&#34;&gt;parser&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;add_argument&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;-network&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;default&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;2d&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;n&#34;&gt;parser&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;add_argument&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;-network_trainer&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;default&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;nnUNetTrainerV2&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;n&#34;&gt;parser&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;add_argument&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;-task&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;default&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;666&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;help&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;can be task name or task id&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;n&#34;&gt;parser&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;add_argument&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;-fold&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;default&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;0&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;help&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;0, 1, ..., 5 or &amp;#39;&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;all&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h1 id=&#34;二构建网络&#34;&gt;二、构建网络
+&lt;/h1&gt;&lt;h2 id=&#34;21-前置知识&#34;&gt;2.1 前置知识
+&lt;/h2&gt;&lt;p&gt;&lt;strong&gt;nnUnet&lt;/strong&gt; 默认使用深监督，意味着自定义网络输出应为一个列表形式。然而，在网络推理时，我们只需要最高分辨率的输出，不需要多层次输出。在nnUnet官方实现中，使用 &lt;strong&gt;deep_supervision&lt;/strong&gt; 参数控制是否多层次输出。综上所述，自定义网络需要满足两个条件：&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;spec文件的配置&lt;/li&gt;
-&lt;li&gt;依赖项补齐&lt;/li&gt;
+&lt;li&gt;支持多层次输出&lt;/li&gt;
+&lt;li&gt;使用变量deep_supervision控制输出类型&lt;/li&gt;
 &lt;/ul&gt;
-&lt;h3 id=&#34;131--spec文件的配置&#34;&gt;1.3.1  spec文件的配置
-&lt;/h3&gt;&lt;p&gt;关于.spec文件配置详见参考资料 &lt;a class=&#34;link&#34; href=&#34;https://blog.csdn.net/weixin_41870706/article/details/101780731&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
-    &gt;[1]&lt;/a&gt;，本文不赘述&lt;/p&gt;
-&lt;h3 id=&#34;132--依赖项补齐&#34;&gt;1.3.2  依赖项补齐
-&lt;/h3&gt;&lt;p&gt;在测试阶段，应使用-D模式打包，方便分析缺失的依赖项。运行打包后的程序，常报如下错误：&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://wakingupdelta.github.io/p/pyinstaller%E6%89%93%E5%8C%85pytorch%E4%BB%A3%E7%A0%81/image-20240903141254175.png&#34;
-	width=&#34;1224&#34;
-	height=&#34;95&#34;
-	srcset=&#34;https://wakingupdelta.github.io/p/pyinstaller%E6%89%93%E5%8C%85pytorch%E4%BB%A3%E7%A0%81/image-20240903141254175_hua214236ce2a721fda59fdbd749f9c0f6_137563_480x0_resize_box_3.png 480w, https://wakingupdelta.github.io/p/pyinstaller%E6%89%93%E5%8C%85pytorch%E4%BB%A3%E7%A0%81/image-20240903141254175_hua214236ce2a721fda59fdbd749f9c0f6_137563_1024x0_resize_box_3.png 1024w&#34;
+&lt;h2 id=&#34;22-嵌入自定义网络&#34;&gt;2.2 嵌入自定义网络
+&lt;/h2&gt;&lt;h3 id=&#34;221-包装网络&#34;&gt;2.2.1 包装网络
+&lt;/h3&gt;&lt;p&gt;这里提供一种对已有网络包装的方法，仅供参考&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;14
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;15
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;16
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;torch.nn&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;as&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;nn&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;k&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;custom_net&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;nn&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Module&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;):&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;k&#34;&gt;def&lt;/span&gt; &lt;span class=&#34;fm&#34;&gt;__init__&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;bp&#34;&gt;self&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,):&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;nb&#34;&gt;super&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;custom_net&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;bp&#34;&gt;self&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;fm&#34;&gt;__init__&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;bp&#34;&gt;self&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;deep_supervision&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;kc&#34;&gt;True&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;c1&#34;&gt;# 使用你自己的网络&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;bp&#34;&gt;self&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;model&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;kc&#34;&gt;None&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;k&#34;&gt;def&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;forward&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;bp&#34;&gt;self&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;x&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;):&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;n&#34;&gt;output&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;bp&#34;&gt;self&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;model&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;x&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;bp&#34;&gt;self&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;deep_supervision&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;            &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;output&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;k&#34;&gt;else&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;            &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;output&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h3 id=&#34;222-嵌入主框架&#34;&gt;2.2.2 嵌入主框架
+&lt;/h3&gt;&lt;p&gt;将自定义网络嵌套进主框架。打开文件 &lt;strong&gt;nnunetv2/training/nnUNetTrainer/nnUNetTrainer.py&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;替换函数 &lt;strong&gt;build_network_architecture&lt;/strong&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;9
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;k&#34;&gt;def&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;build_network_architecture&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;bp&#34;&gt;self&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;plans_manager&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;PlansManager&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;                                   &lt;span class=&#34;n&#34;&gt;dataset_json&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;                                   &lt;span class=&#34;n&#34;&gt;configuration_manager&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;ConfigurationManager&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;                                   &lt;span class=&#34;n&#34;&gt;num_input_channels&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;                                   &lt;span class=&#34;n&#34;&gt;enable_deep_supervision&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;bool&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;kc&#34;&gt;True&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;nn&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Module&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;kn&#34;&gt;from&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;dynamic_network_architectures.initialization.weight_init&lt;/span&gt; &lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;InitWeights_He&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;n&#34;&gt;model&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;custom_net&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;n&#34;&gt;model&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;apply&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;InitWeights_He&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;mf&#34;&gt;1e-2&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;model&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h1 id=&#34;参考资料&#34;&gt;参考资料
+&lt;/h1&gt;&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.nature.com/articles/s41592-020-01008-z.&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;[1] nnU-Net: a self-configuring method for deep learning-based biomedical image segmentation&lt;/a&gt;&lt;br&gt;
+&lt;a class=&#34;link&#34; href=&#34;https://github.com/MIC-DKFZ/nnUNet&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;[2] nnUnet&lt;/a&gt;&lt;/p&gt;
+</description>
+        </item>
+        <item>
+        <title>云顶之弈 辅助高亮显示</title>
+        <link>https://wakingupdelta.github.io/p/%E4%BA%91%E9%A1%B6%E4%B9%8B%E5%BC%88-%E8%BE%85%E5%8A%A9%E9%AB%98%E4%BA%AE%E6%98%BE%E7%A4%BA/</link>
+        <pubDate>Wed, 03 Jan 2024 00:00:00 +0000</pubDate>
+        
+        <guid>https://wakingupdelta.github.io/p/%E4%BA%91%E9%A1%B6%E4%B9%8B%E5%BC%88-%E8%BE%85%E5%8A%A9%E9%AB%98%E4%BA%AE%E6%98%BE%E7%A4%BA/</guid>
+        <description>&lt;h1 id=&#34;一前言&#34;&gt;一、前言
+&lt;/h1&gt;&lt;p&gt;本文提供一个简易的demo，用于对目标阵容的高亮显示，避免猪脑过载或慢速思考。基本流程由两部分组成&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;使用 &lt;strong&gt;tesseract&lt;/strong&gt; 识别卡牌池名字，与目标阵容进行比较，得到卡牌坐标&lt;/li&gt;
+&lt;li&gt;基于坐标对卡牌高亮显示&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1 id=&#34;二环境设置&#34;&gt;二、环境设置
+&lt;/h1&gt;&lt;p&gt;博主是在 &lt;strong&gt;windows&lt;/strong&gt; 上运行，搭配 &lt;strong&gt;Pycharm&lt;/strong&gt; 使用，使用该教程需要进行以下设置：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;将英雄联盟客户端语言设置为 &lt;strong&gt;英文&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;游戏内设置分辨率为 &lt;strong&gt;1920*1080&lt;/strong&gt;，&lt;strong&gt;无边框模式&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;windows桌面，右键-&amp;gt;显示设置-&amp;gt;缩放与布局-&amp;gt;更改文本、应用等项目的大小-&amp;gt;&lt;strong&gt;100%&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;通过参考资料 &lt;a class=&#34;link&#34; href=&#34;https://tesseract-ocr.github.io/tessdoc/Installation.html&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;[1]&lt;/a&gt; 安装 &lt;strong&gt;tesseract&lt;/strong&gt;，并配置到 &lt;strong&gt;系统环境变量&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;以 &lt;strong&gt;管理员&lt;/strong&gt; 身份运行pycharm&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h1 id=&#34;三卡牌识别&#34;&gt;三、卡牌识别
+&lt;/h1&gt;&lt;h2 id=&#34;31-候选框截取&#34;&gt;3.1 候选框截取
+&lt;/h2&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;14
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;15
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;16
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;17
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;18
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;19
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;20
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;21
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;pyscreenshot&lt;/span&gt;                
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;kn&#34;&gt;from&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;ocr&lt;/span&gt; &lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;get_text_from_image&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;kn&#34;&gt;from&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;pynput&lt;/span&gt; &lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;keyboard&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;k&#34;&gt;def&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;takeScreenshotROI&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;coordinates&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;):&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;c1&#34;&gt;# 根据坐标截图&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;pyscreenshot&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;grab&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;coordinates&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;k&#34;&gt;def&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;get_champions&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;():&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;n&#34;&gt;width&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;height&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1920&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;1080&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;n&#34;&gt;left&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;top&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;right&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;bottom&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;int&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;width&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;*&lt;/span&gt; &lt;span class=&#34;mf&#34;&gt;0.25&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;),&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;int&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;height&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;*&lt;/span&gt; &lt;span class=&#34;mf&#34;&gt;0.96&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;),&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;int&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;width&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;*&lt;/span&gt; &lt;span class=&#34;mf&#34;&gt;0.77&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;),&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;int&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;height&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;*&lt;/span&gt; &lt;span class=&#34;mf&#34;&gt;0.99&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;n&#34;&gt;_width&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;right&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;left&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;/&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;5&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;n&#34;&gt;champions_list&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;k&#34;&gt;for&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;idx&lt;/span&gt; &lt;span class=&#34;ow&#34;&gt;in&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;range&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;5&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;):&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;n&#34;&gt;coordinates&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;int&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;left&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;idx&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;*&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;_width&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;+&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;10&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;top&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;int&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;left&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;idx&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;+&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;*&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;_width&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;55&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;bottom&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;c1&#34;&gt;# 对卡牌池截图&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;n&#34;&gt;roi_example&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;takeScreenshotROI&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;coordinates&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;c1&#34;&gt;# 函数get_text_from_image对截图进行ocr识别&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;n&#34;&gt;champion_name&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;get_text_from_image&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;roi_example&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;n&#34;&gt;champions_list&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;append&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;champion_name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;champions_list&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;计算左上和右下坐标 &lt;em&gt;&lt;strong&gt;coordinates&lt;/strong&gt;&lt;/em&gt;，后根据坐标截取屏幕。由于卡池共有五张牌，需要循环五次&lt;/p&gt;
+&lt;h2 id=&#34;32-ocr识别&#34;&gt;3.2 ocr识别
+&lt;/h2&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;14
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;15
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;16
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;17
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;18
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;19
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;20
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;21
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;22
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;23
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;24
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;25
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;26
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;27
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;28
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;29
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;30
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;31
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;32
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;33
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;34
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;kn&#34;&gt;from&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;typing&lt;/span&gt; &lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Any&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;cv2&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;numpy&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;as&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;np&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;kn&#34;&gt;from&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;PIL&lt;/span&gt; &lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;ImageGrab&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;pytesseract&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# 转为灰度图&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;k&#34;&gt;def&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;image_grayscale&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;image&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;ImageGrab&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Image&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Any&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;cv2&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;cvtColor&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;image&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;cv2&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;COLOR_BGR2GRAY&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# 阈值分割&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;k&#34;&gt;def&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;image_thresholding&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;image&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;ImageGrab&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Image&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Any&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;cv2&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;threshold&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;image&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;255&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;cv2&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;THRESH_BINARY_INV&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;cv2&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;THRESH_OTSU&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)[&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# 转numpy&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;k&#34;&gt;def&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;image_array&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;image&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;ImageGrab&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Image&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Any&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;s2&#34;&gt;&amp;#34;&amp;#34;&amp;#34;Turns the image into an array&amp;#34;&amp;#34;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;n&#34;&gt;image&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;np&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;array&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;image&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;n&#34;&gt;image&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;image&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;...&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;3&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;image&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# 调整尺寸&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;k&#34;&gt;def&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;image_resize&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;image&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;int&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;scale&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;int&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Any&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;s2&#34;&gt;&amp;#34;&amp;#34;&amp;#34;Resizes the image using the scale passed in argument two&amp;#34;&amp;#34;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;width&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;height&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;image&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;width&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;*&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;scale&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;image&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;height&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;*&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;scale&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;image&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;resize&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;((&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;width&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;height&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# 对卡牌池截图进行ocr识别&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;k&#34;&gt;def&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;get_text_from_image&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;image&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;ImageGrab&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Image&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;whitelist&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;str&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;str&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;n&#34;&gt;resize&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;image_resize&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;image&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;3&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;n&#34;&gt;array&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;image_array&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;resize&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;n&#34;&gt;grayscale&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;image_grayscale&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;array&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;n&#34;&gt;thresholding&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;image_thresholding&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;grayscale&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;pytesseract&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;image_to_string&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;thresholding&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;config&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;sa&#34;&gt;f&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;--psm 7 -c tessedit_char_whitelist=&lt;/span&gt;&lt;span class=&#34;si&#34;&gt;{&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;whitelist&lt;/span&gt;&lt;span class=&#34;si&#34;&gt;}&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;strip&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;由 &lt;strong&gt;3.1候选框&lt;/strong&gt; 截取到的图片将作为参数，传入函数 &lt;em&gt;&lt;strong&gt;get_text_from_image&lt;/strong&gt;&lt;/em&gt; 进行识别，得到卡牌名&lt;/p&gt;
+&lt;h1 id=&#34;四高亮显示&#34;&gt;四、高亮显示
+&lt;/h1&gt;&lt;p&gt;基于第三章的函数，会得到现在卡牌池的名字列表，将该列表与目标阵容进行比较，得到需高亮位置的坐标，后使用 &lt;strong&gt;Pyqt5&lt;/strong&gt; 显示&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;14
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;15
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;16
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;17
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;18
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;19
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;20
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;21
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;22
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;23
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;24
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;25
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;26
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;27
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;28
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;29
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;kn&#34;&gt;from&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;PyQt5.QtWidgets&lt;/span&gt; &lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;*&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;kn&#34;&gt;from&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;PyQt5.QtGui&lt;/span&gt; &lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;*&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;kn&#34;&gt;from&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;PyQt5.QtCore&lt;/span&gt; &lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Qt&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;sys&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;kn&#34;&gt;from&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;PyQt5&lt;/span&gt; &lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;QtCore&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;k&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;Window&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;QMainWindow&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;):&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;k&#34;&gt;def&lt;/span&gt; &lt;span class=&#34;fm&#34;&gt;__init__&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;bp&#34;&gt;self&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;display_list&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;):&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;nb&#34;&gt;super&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Window&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;bp&#34;&gt;self&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;fm&#34;&gt;__init__&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kc&#34;&gt;None&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;QtCore&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Qt&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;WindowStaysOnTopHint&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;bp&#34;&gt;self&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;setWindowFlag&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Qt&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;FramelessWindowHint&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;bp&#34;&gt;self&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;setWindowTitle&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;no title&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;bp&#34;&gt;self&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;setGeometry&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;500&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;940&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;950&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;30&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;c1&#34;&gt;# 卡牌池有四个位置，display_list表示需要标记recommen的卡牌&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;k&#34;&gt;for&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;idx&lt;/span&gt; &lt;span class=&#34;ow&#34;&gt;in&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;display_list&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;            &lt;span class=&#34;bp&#34;&gt;self&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;label&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;QLabel&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;recommend&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;bp&#34;&gt;self&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;            &lt;span class=&#34;bp&#34;&gt;self&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;label&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;setStyleSheet&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;background-color: lightgreen; border: 3px solid green&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;            &lt;span class=&#34;bp&#34;&gt;self&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;label&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;setGeometry&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;200&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;*&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;idx&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;100&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;30&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;            
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;bp&#34;&gt;self&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;show&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;k&#34;&gt;def&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;keyPressEvent&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;bp&#34;&gt;self&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;e&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;):&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;e&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;key&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;==&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Qt&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Key_D&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;            &lt;span class=&#34;bp&#34;&gt;self&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;close&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;            
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;n&#34;&gt;App&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;QApplication&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;sys&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;argv&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;n&#34;&gt;win1&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Window&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;([&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;3&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;])&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;n&#34;&gt;App&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;exec&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;效果预览&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://wakingupdelta.github.io/p/%E4%BA%91%E9%A1%B6%E4%B9%8B%E5%BC%88-%E8%BE%85%E5%8A%A9%E9%AB%98%E4%BA%AE%E6%98%BE%E7%A4%BA/image-20240903143747782.png&#34;
+	width=&#34;1127&#34;
+	height=&#34;194&#34;
+	srcset=&#34;https://wakingupdelta.github.io/p/%E4%BA%91%E9%A1%B6%E4%B9%8B%E5%BC%88-%E8%BE%85%E5%8A%A9%E9%AB%98%E4%BA%AE%E6%98%BE%E7%A4%BA/image-20240903143747782_hue5f4aaf8cdee5fb403bd4dfcaf3b663b_289827_480x0_resize_box_3.png 480w, https://wakingupdelta.github.io/p/%E4%BA%91%E9%A1%B6%E4%B9%8B%E5%BC%88-%E8%BE%85%E5%8A%A9%E9%AB%98%E4%BA%AE%E6%98%BE%E7%A4%BA/image-20240903143747782_hue5f4aaf8cdee5fb403bd4dfcaf3b663b_289827_1024x0_resize_box_3.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
-		alt=&#34;image-20240903141254175&#34;
+		alt=&#34;image-20240903143747782&#34;
 	
 	
 		class=&#34;gallery-image&#34; 
-		data-flex-grow=&#34;1288&#34;
-		data-flex-basis=&#34;3092px&#34;
-	
-&gt;以上的输出信息表明缺少 &lt;strong&gt;caffe2_nvrtc.dll&lt;/strong&gt; 或对应的 &lt;strong&gt;依赖项&lt;/strong&gt;，补齐过程如下:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;判断输出信息路径中 &lt;strong&gt;caffe2_nvrtc.dll&lt;/strong&gt; 是否存在&lt;/li&gt;
-&lt;li&gt;若不存在，直接在 &lt;strong&gt;Anaconda&lt;/strong&gt; 环境搜索 &lt;strong&gt;caffe2_nvrtc.dll&lt;/strong&gt;，粘贴到 &lt;strong&gt;根目录&lt;/strong&gt;&lt;/li&gt;
-&lt;li&gt;若存在，说明是缺少依赖项，使用 &lt;strong&gt;Dependencies&lt;/strong&gt; 工具分析 &lt;strong&gt;caffe2_nvrtc.dll&lt;/strong&gt; 所需要的依赖项，后补齐到&lt;strong&gt;根目录&lt;/strong&gt;下&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;&lt;strong&gt;Dependencies&lt;/strong&gt; 是一个分析依赖项的工具，可在参考资料 &lt;a class=&#34;link&#34; href=&#34;https://github.com/lucasg/Dependencies&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
-    &gt;[2]&lt;/a&gt; 中安装，使用时直接将 &lt;strong&gt;dll文件&lt;/strong&gt; 拖进去。这里以 &lt;em&gt;&lt;strong&gt;torch_python.dll&lt;/strong&gt;&lt;/em&gt; 举例&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://wakingupdelta.github.io/p/pyinstaller%E6%89%93%E5%8C%85pytorch%E4%BB%A3%E7%A0%81/image-20240903141358548.png&#34;
-	width=&#34;1217&#34;
-	height=&#34;767&#34;
-	srcset=&#34;https://wakingupdelta.github.io/p/pyinstaller%E6%89%93%E5%8C%85pytorch%E4%BB%A3%E7%A0%81/image-20240903141358548_hua431770df306b4cdd6865966889f62a4_415390_480x0_resize_box_3.png 480w, https://wakingupdelta.github.io/p/pyinstaller%E6%89%93%E5%8C%85pytorch%E4%BB%A3%E7%A0%81/image-20240903141358548_hua431770df306b4cdd6865966889f62a4_415390_1024x0_resize_box_3.png 1024w&#34;
-	loading=&#34;lazy&#34;
-	
-		alt=&#34;image-20240903141358548&#34;
-	
-	
-		class=&#34;gallery-image&#34; 
-		data-flex-grow=&#34;158&#34;
-		data-flex-basis=&#34;380px&#34;
+		data-flex-grow=&#34;580&#34;
+		data-flex-basis=&#34;1394px&#34;
 	
 &gt;&lt;/p&gt;
-&lt;p&gt;可以发现，缺少若干个dll文件，补齐即可。重复迭代上述补齐操作，基本可解决dll报错的问题&lt;/p&gt;
-&lt;h2 id=&#34;14-生产环境部署与测试&#34;&gt;1.4 生产环境部署与测试
-&lt;/h2&gt;&lt;p&gt;博主使用的是pytorch的GPU版本，故在生产环境上需配置cuda。建议pytorch程序显式提供cpu推理功能，以便在测试时可排除cuda环境造成的问题。最后，祝大家好运，打包成功那一刻是蛮喜悦的！&lt;/p&gt;
 &lt;h1 id=&#34;参考资料&#34;&gt;参考资料
-&lt;/h1&gt;&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;https://blog.csdn.net/weixin_41870706/article/details/101780731&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
-    &gt;[1] spec文件配置&lt;/a&gt;&lt;br&gt;
-&lt;a class=&#34;link&#34; href=&#34;https://github.com/lucasg/Dependencies&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
-    &gt;[2] Dependencies的安装&lt;/a&gt;&lt;br&gt;
-&lt;a class=&#34;link&#34; href=&#34;https://blog.csdn.net/weixin_41870706/article/details/101780731&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
-    &gt;[3] python项目（非单一.py文件）用Pyinstaller打包发布成exe，在windos上运行程序&lt;/a&gt;&lt;br&gt;
-&lt;a class=&#34;link&#34; href=&#34;https://medium.com/@exexzxzpo/%E5%98%97%E8%A9%A6%E4%BD%BF%E7%94%A8pyinstaller%E6%89%93%E5%8C%85yolov5%E4%B8%ADdetect-py%E6%96%87%E4%BB%B6-%E5%90%ABpytorch%E6%A1%86%E6%9E%B6-%E6%89%80%E9%81%87%E5%88%B0%E7%9A%84%E5%95%8F%E9%A1%8C-543f5481b304&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
-    &gt;[4] 嘗試使用Pyinstaller打包yolov5中detect.py文件(含pytorch框架)所遇到的問題&lt;/a&gt;&lt;br&gt;
-&lt;a class=&#34;link&#34; href=&#34;https://www.bilibili.com/video/BV1bp4y1D7Dg?spm_id_from=333.880.my_history.page.click&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
-    &gt;[5] pyinstaller打包经验分享以及一些错误解决方法&lt;/a&gt;&lt;/p&gt;
+&lt;/h1&gt;&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;https://tesseract-ocr.github.io/tessdoc/Installation.html&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;[1] tesseract&lt;/a&gt;&lt;br&gt;
+&lt;a class=&#34;link&#34; href=&#34;https://github.com/jfd02/TFT-OCR-BOT&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;[2] TFT-OCR-BOT&lt;/a&gt;&lt;br&gt;
+&lt;a class=&#34;link&#34; href=&#34;https://github.com/Eikinel/TFT-Auto-Buy&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;[3] TFT-Auto-Buy&lt;/a&gt;&lt;br&gt;
+&lt;a class=&#34;link&#34; href=&#34;https://github.com/luxiaolan6373/tft_zynp&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;[4] tft_zynp&lt;/a&gt;&lt;/p&gt;
 </description>
         </item>
         <item>
         <title>Ubuntu驱动安装，一发入魂</title>
         <link>https://wakingupdelta.github.io/p/ubuntu%E9%A9%B1%E5%8A%A8%E5%AE%89%E8%A3%85%E4%B8%80%E5%8F%91%E5%85%A5%E9%AD%82/</link>
-        <pubDate>Sun, 28 Apr 2024 00:00:00 +0000</pubDate>
+        <pubDate>Mon, 13 Nov 2023 00:00:00 +0000</pubDate>
         
         <guid>https://wakingupdelta.github.io/p/ubuntu%E9%A9%B1%E5%8A%A8%E5%AE%89%E8%A3%85%E4%B8%80%E5%8F%91%E5%85%A5%E9%AD%82/</guid>
         <description>&lt;h1 id=&#34;前言&#34;&gt;前言
@@ -339,20 +1091,99 @@
 </description>
         </item>
         <item>
-        <title>改造nnUnet，嵌入第三方网络</title>
-        <link>https://wakingupdelta.github.io/p/%E6%94%B9%E9%80%A0nnunet%E5%B5%8C%E5%85%A5%E7%AC%AC%E4%B8%89%E6%96%B9%E7%BD%91%E7%BB%9C/</link>
-        <pubDate>Sun, 28 Apr 2024 00:00:00 +0000</pubDate>
+        <title>Pyinstaller打包pytorch代码</title>
+        <link>https://wakingupdelta.github.io/p/pyinstaller%E6%89%93%E5%8C%85pytorch%E4%BB%A3%E7%A0%81/</link>
+        <pubDate>Tue, 01 Aug 2023 00:00:00 +0000</pubDate>
         
-        <guid>https://wakingupdelta.github.io/p/%E6%94%B9%E9%80%A0nnunet%E5%B5%8C%E5%85%A5%E7%AC%AC%E4%B8%89%E6%96%B9%E7%BD%91%E7%BB%9C/</guid>
-        <description></description>
-        </item>
-        <item>
-        <title>云顶之弈 辅助高亮显示</title>
-        <link>https://wakingupdelta.github.io/p/%E4%BA%91%E9%A1%B6%E4%B9%8B%E5%BC%88-%E8%BE%85%E5%8A%A9%E9%AB%98%E4%BA%AE%E6%98%BE%E7%A4%BA/</link>
-        <pubDate>Sun, 28 Apr 2024 00:00:00 +0000</pubDate>
-        
-        <guid>https://wakingupdelta.github.io/p/%E4%BA%91%E9%A1%B6%E4%B9%8B%E5%BC%88-%E8%BE%85%E5%8A%A9%E9%AB%98%E4%BA%AE%E6%98%BE%E7%A4%BA/</guid>
-        <description></description>
+        <guid>https://wakingupdelta.github.io/p/pyinstaller%E6%89%93%E5%8C%85pytorch%E4%BB%A3%E7%A0%81/</guid>
+        <description>&lt;h1 id=&#34;引言&#34;&gt;引言
+&lt;/h1&gt;&lt;p&gt;第一次尝试用 &lt;strong&gt;Pyinstaller&lt;/strong&gt; 打包 &lt;strong&gt;pytorch&lt;/strong&gt; 代码，碰见了很多问题，也耗费了许多时间！想把这个过程中碰到的问题与解决方法记录一下，方便后来者&lt;/p&gt;
+&lt;h1 id=&#34;一开箱使用&#34;&gt;一、开箱使用
+&lt;/h1&gt;&lt;h2 id=&#34;11-基本流程&#34;&gt;1.1 基本流程
+&lt;/h2&gt;&lt;p&gt;在 &lt;strong&gt;windows&lt;/strong&gt; 平台上，打包 &lt;strong&gt;pytorch&lt;/strong&gt; 代码的基本流程如下：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;环境配置与测试&lt;/li&gt;
+&lt;li&gt;打包与本地调试&lt;/li&gt;
+&lt;li&gt;生产环境部署与测试&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;12-环境配置与测试&#34;&gt;1.2 环境配置与测试
+&lt;/h2&gt;&lt;p&gt;在 &lt;strong&gt;Pycharm&lt;/strong&gt; 打开项目，点击 &lt;strong&gt;Terminal&lt;/strong&gt;，输入命令 &lt;code&gt;pip install pyinstaller&lt;/code&gt;，安装打包框架&lt;strong&gt;Pyinstaller&lt;/strong&gt;，后编写测试文件  &lt;em&gt;&lt;strong&gt;hello.py&lt;/strong&gt;&lt;/em&gt;:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;k&#34;&gt;if&lt;/span&gt;  &lt;span class=&#34;vm&#34;&gt;__name__&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;==&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;__main__&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;nb&#34;&gt;print&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;Hello World!&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;k&#34;&gt;while&lt;/span&gt; &lt;span class=&#34;kc&#34;&gt;True&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;k&#34;&gt;pass&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;需确保 &lt;strong&gt;Terminal&lt;/strong&gt; 路径为项目根目录，执行 &lt;code&gt;pyinstaller -F hello.py&lt;/code&gt; 开始打包！在文件夹 &lt;strong&gt;dist&lt;/strong&gt; 中找到 &lt;strong&gt;hello.exe&lt;/strong&gt; 程序，若运行通过，说明环境配置成功&lt;/p&gt;
+&lt;h2 id=&#34;13-打包与本地调试&#34;&gt;1.3 打包与本地调试
+&lt;/h2&gt;&lt;p&gt;实际的项目一般是多文件，打包过程较复杂，需把握两个核心要素：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;spec文件的配置&lt;/li&gt;
+&lt;li&gt;依赖项补齐&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;131--spec文件的配置&#34;&gt;1.3.1  spec文件的配置
+&lt;/h3&gt;&lt;p&gt;关于.spec文件配置详见参考资料 &lt;a class=&#34;link&#34; href=&#34;https://blog.csdn.net/weixin_41870706/article/details/101780731&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;[1]&lt;/a&gt;，本文不赘述&lt;/p&gt;
+&lt;h3 id=&#34;132--依赖项补齐&#34;&gt;1.3.2  依赖项补齐
+&lt;/h3&gt;&lt;p&gt;在测试阶段，应使用-D模式打包，方便分析缺失的依赖项。运行打包后的程序，常报如下错误：&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://wakingupdelta.github.io/p/pyinstaller%E6%89%93%E5%8C%85pytorch%E4%BB%A3%E7%A0%81/image-20240903141254175.png&#34;
+	width=&#34;1224&#34;
+	height=&#34;95&#34;
+	srcset=&#34;https://wakingupdelta.github.io/p/pyinstaller%E6%89%93%E5%8C%85pytorch%E4%BB%A3%E7%A0%81/image-20240903141254175_hua214236ce2a721fda59fdbd749f9c0f6_137563_480x0_resize_box_3.png 480w, https://wakingupdelta.github.io/p/pyinstaller%E6%89%93%E5%8C%85pytorch%E4%BB%A3%E7%A0%81/image-20240903141254175_hua214236ce2a721fda59fdbd749f9c0f6_137563_1024x0_resize_box_3.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;image-20240903141254175&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;1288&#34;
+		data-flex-basis=&#34;3092px&#34;
+	
+&gt;以上的输出信息表明缺少 &lt;strong&gt;caffe2_nvrtc.dll&lt;/strong&gt; 或对应的 &lt;strong&gt;依赖项&lt;/strong&gt;，补齐过程如下:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;判断输出信息路径中 &lt;strong&gt;caffe2_nvrtc.dll&lt;/strong&gt; 是否存在&lt;/li&gt;
+&lt;li&gt;若不存在，直接在 &lt;strong&gt;Anaconda&lt;/strong&gt; 环境搜索 &lt;strong&gt;caffe2_nvrtc.dll&lt;/strong&gt;，粘贴到 &lt;strong&gt;根目录&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;若存在，说明是缺少依赖项，使用 &lt;strong&gt;Dependencies&lt;/strong&gt; 工具分析 &lt;strong&gt;caffe2_nvrtc.dll&lt;/strong&gt; 所需要的依赖项，后补齐到&lt;strong&gt;根目录&lt;/strong&gt;下&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;Dependencies&lt;/strong&gt; 是一个分析依赖项的工具，可在参考资料 &lt;a class=&#34;link&#34; href=&#34;https://github.com/lucasg/Dependencies&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;[2]&lt;/a&gt; 中安装，使用时直接将 &lt;strong&gt;dll文件&lt;/strong&gt; 拖进去。这里以 &lt;em&gt;&lt;strong&gt;torch_python.dll&lt;/strong&gt;&lt;/em&gt; 举例&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://wakingupdelta.github.io/p/pyinstaller%E6%89%93%E5%8C%85pytorch%E4%BB%A3%E7%A0%81/image-20240903141358548.png&#34;
+	width=&#34;1217&#34;
+	height=&#34;767&#34;
+	srcset=&#34;https://wakingupdelta.github.io/p/pyinstaller%E6%89%93%E5%8C%85pytorch%E4%BB%A3%E7%A0%81/image-20240903141358548_hua431770df306b4cdd6865966889f62a4_415390_480x0_resize_box_3.png 480w, https://wakingupdelta.github.io/p/pyinstaller%E6%89%93%E5%8C%85pytorch%E4%BB%A3%E7%A0%81/image-20240903141358548_hua431770df306b4cdd6865966889f62a4_415390_1024x0_resize_box_3.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;image-20240903141358548&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;158&#34;
+		data-flex-basis=&#34;380px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;可以发现，缺少若干个dll文件，补齐即可。重复迭代上述补齐操作，基本可解决dll报错的问题&lt;/p&gt;
+&lt;h2 id=&#34;14-生产环境部署与测试&#34;&gt;1.4 生产环境部署与测试
+&lt;/h2&gt;&lt;p&gt;博主使用的是pytorch的GPU版本，故在生产环境上需配置cuda。建议pytorch程序显式提供cpu推理功能，以便在测试时可排除cuda环境造成的问题。最后，祝大家好运，打包成功那一刻是蛮喜悦的！&lt;/p&gt;
+&lt;h1 id=&#34;参考资料&#34;&gt;参考资料
+&lt;/h1&gt;&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;https://blog.csdn.net/weixin_41870706/article/details/101780731&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;[1] spec文件配置&lt;/a&gt;&lt;br&gt;
+&lt;a class=&#34;link&#34; href=&#34;https://github.com/lucasg/Dependencies&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;[2] Dependencies的安装&lt;/a&gt;&lt;br&gt;
+&lt;a class=&#34;link&#34; href=&#34;https://blog.csdn.net/weixin_41870706/article/details/101780731&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;[3] python项目（非单一.py文件）用Pyinstaller打包发布成exe，在windos上运行程序&lt;/a&gt;&lt;br&gt;
+&lt;a class=&#34;link&#34; href=&#34;https://medium.com/@exexzxzpo/%E5%98%97%E8%A9%A6%E4%BD%BF%E7%94%A8pyinstaller%E6%89%93%E5%8C%85yolov5%E4%B8%ADdetect-py%E6%96%87%E4%BB%B6-%E5%90%ABpytorch%E6%A1%86%E6%9E%B6-%E6%89%80%E9%81%87%E5%88%B0%E7%9A%84%E5%95%8F%E9%A1%8C-543f5481b304&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;[4] 嘗試使用Pyinstaller打包yolov5中detect.py文件(含pytorch框架)所遇到的問題&lt;/a&gt;&lt;br&gt;
+&lt;a class=&#34;link&#34; href=&#34;https://www.bilibili.com/video/BV1bp4y1D7Dg?spm_id_from=333.880.my_history.page.click&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;[5] pyinstaller打包经验分享以及一些错误解决方法&lt;/a&gt;&lt;/p&gt;
+</description>
         </item>
         
     </channel>

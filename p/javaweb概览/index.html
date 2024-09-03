@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 <html lang="zh-cn" dir="ltr">
     <head><meta charset='utf-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="">
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="一、Servlet Servlet是一套规范 后端 遵守 规范 编写 小程序 web服务器 遵守 规范 调用 小程序 模拟流程 实例化Servlet、ServletR">
 <title>javaweb概览</title>
 
 <link rel='canonical' href='https://wakingupdelta.github.io/p/javaweb%E6%A6%82%E8%A7%88/'>
 
 <link rel="stylesheet" href="/scss/style.min.0304c6baf04e01a8fe70693791cb744d56a3578a3120a8796cefc66825aa39c7.css"><meta property='og:title' content="javaweb概览">
-<meta property='og:description' content="">
+<meta property='og:description' content="一、Servlet Servlet是一套规范 后端 遵守 规范 编写 小程序 web服务器 遵守 规范 调用 小程序 模拟流程 实例化Servlet、ServletR">
 <meta property='og:url' content='https://wakingupdelta.github.io/p/javaweb%E6%A6%82%E8%A7%88/'>
 <meta property='og:site_name' content='想起床的方差'>
 <meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:published_time' content='2024-06-06T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2024-06-06T00:00:00&#43;00:00'/>
 <meta name="twitter:title" content="javaweb概览">
-<meta name="twitter:description" content="">
+<meta name="twitter:description" content="一、Servlet Servlet是一套规范 后端 遵守 规范 编写 小程序 web服务器 遵守 规范 调用 小程序 模拟流程 实例化Servlet、ServletR">
     <link rel="shortcut icon" href="/favicon.ico" />
 
   
@@ -207,7 +207,139 @@
     <section class="article-content">
     
     
-    
+    <h3 id="一servlet">一、Servlet
+</h3><p>Servlet是一套规范</p>
+<ul>
+<li>后端 遵守 规范 编写 小程序</li>
+<li>web服务器 遵守 规范 调用 小程序
+<ul>
+<li>模拟流程
+<ul>
+<li>实例化Servlet、ServletRequest、ServletResponse</li>
+<li>调用Servlet的service方法，ServletRequest、ServletResponse为入参</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>常见接口</p>
+<ul>
+<li>init 第一次请求 或 容器启动 调用</li>
+<li>destroy 容器关闭 调用</li>
+<li>service 每次请求调用</li>
+<li>getServletConfig
+<ul>
+<li>一个Servlet对应一个ServletConfig</li>
+<li>多个Servlet对应一个ServletContext</li>
+</ul>
+</li>
+</ul>
+<p>请求转发</p>
+<ul>
+<li>服务器内部行为、地址栏不变</li>
+<li>调用新Servlet的service方法</li>
+</ul>
+<p>重定向</p>
+<ul>
+<li>客户端重新发请求、地址栏变化</li>
+</ul>
+<p>会话管理</p>
+<ul>
+<li>会话 &ndash; 一个客户端的多次请求</li>
+<li>session 服务端
+<ul>
+<li>request.getSession
+<ul>
+<li>无cookie新建HttpSession，JSESSIONID以cookie形式写入HttpServletResponse中</li>
+<li>有则查</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>cookie 客户端 浏览器发请求时携带</li>
+<li>简单的登录校验
+<ul>
+<li>查session是否存key为user，有则表示登录成功，可执行业务逻辑</li>
+<li>无则重定向至登录页面，查数据库验证账号和密码，正确则往session中存入user</li>
+</ul>
+</li>
+</ul>
+<p>域对象</p>
+<ul>
+<li>请求域 HttpServletRequest
+<ul>
+<li>数据只存在 该次请求中</li>
+</ul>
+</li>
+<li>会话域 HttpSession
+<ul>
+<li>数据存全局，但只有携带正确JSESSIONID的请求能访问</li>
+</ul>
+</li>
+<li>应用域 ServletContext
+<ul>
+<li>数据存全局</li>
+</ul>
+</li>
+</ul>
+<h3 id="二filter">二、Filter
+</h3><p>一个规范，常见接口</p>
+<ul>
+<li>init 初始化方法，容器调用传入配置信息</li>
+<li>doFilter 过滤方法，实现Servlet执行前、后的逻辑
+<ul>
+<li>入参ServletRequest、ServletResponse、FilterChain</li>
+<li>FilterChain.doFilter(request, response) 放行请求，继续执行下一个Filter？
+<ul>
+<li>FilterChain 粗浅理解、责任链设计模式
+<ul>
+<li>Filter数组，存放Filter穿起来的链</li>
+<li>下标指针，表示当前执行到哪个Filter</li>
+<li>doFilter方法
+<ul>
+<li>判断指针位置，执行完毕，调用Servlet的service方法</li>
+<li>否则，取出Filter，调用Filter的doFilter方法，入参为request、response、this
+<ul>
+<li>在执行下一个Filter的doFilter方法时，this.doFilter可能会被调用，较为复杂的递归</li>
+<li>基于这种递归实现，可以使得多个Filter分层次将Servlet抱起来，优先级最高的Filter，在业务逻辑前最先执行，在业务逻辑后最后执行</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>destroy 销毁方法，容器回收过滤器对象前调用</li>
+</ul>
+<h3 id="三listener">三、Listener
+</h3><p>观察者模式</p>
+<p>分类</p>
+<ul>
+<li>监听对象划分
+<ul>
+<li>request、session、application</li>
+</ul>
+</li>
+<li>监听事件划分 对应不同的接口方法
+<ul>
+<li>对象创建和销毁</li>
+<li>数据更新</li>
+<li>其他
+<ul>
+<li>HttpSessionBindingListener 监听 Listener 在 session域中的增加、移除</li>
+<li>HttpSessionActivationListener 钝化监听器，监听某个对象在session中序列化、反序列化</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="四ajax">四、AJAX
+</h3><p>Asynchronous JavaScript and XML</p>
+<p>简单理解，js代码异步发送http请求，请求收到后回调函数执行，渲染xml页面</p>
+
 </section>
 
 
