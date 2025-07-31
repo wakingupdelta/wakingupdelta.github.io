@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>汪苏泷歌曲预习播放页</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            background-color: #fff;
+            color: #000;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .container {
+            width: 100%;
+            height: 100vh;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* 状态栏占位 */
+        .status-bar-placeholder {
+            height: 28px;
+            width: 100%;
+            background-color: #ECF0F3;
+        }
+
+        /* 背景图片 */
+        .background-image {
+            position: absolute;
+            left: 0;
+            width: 100%;
+            height: 880px;
+            background-image: url('./enter-search.png');
+            background-size: cover;
+            background-position: center;
+            z-index: -1;
+        }
+
+        /* 内容区域 */
+        .content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding-top: 88px;
+            padding-bottom: 20px;
+        }
+
+        /* 卡片容器 */
+        .card {
+            width: 657px;
+            height: 400px;
+            background-color: #ECF0F3;
+            margin: 295px auto 0;
+            border-radius: 16px;
+            padding: 16px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        /* 标题 */
+        .title {
+            font-family: 'PingFang SC', sans-serif;
+            font-weight: 600;
+            font-size: 36px;
+            line-height: 1.4;
+            color: #000;
+            margin-bottom: 16px;
+            padding: 0 17px;
+        }
+
+        /* 描述文本 */
+        .description {
+            font-family: 'PingFang SC', sans-serif;
+            font-weight: 400;
+            font-size: 34px;
+            line-height: 1.7;
+            color: rgba(0, 0, 0, 0.7);
+            padding: 0 17px;
+        }
+
+        /* 响应式调整 */
+        @media (max-height: 700px) {
+            .card {
+                margin-top: 200px;
+                height: 350px;
+            }
+            
+            .title {
+                font-size: 32px;
+            }
+            
+            .description {
+                font-size: 30px;
+            }
+        }
+
+        @media (max-height: 650px) {
+            .card {
+                margin-top: 150px;
+                height: 320px;
+            }
+            
+            .title {
+                font-size: 28px;
+            }
+            
+            .description {
+                font-size: 26px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 状态栏占位（不显示具体内容） -->
+        <div class="status-bar-placeholder"></div>
+        
+        <!-- 背景图片 -->
+        <div class="background-image"></div>
+
+    </div>
+
+    <script>
+        // 全局点击跳转到order.html
+        document.addEventListener('click', function() {
+            window.location.href = 'order.html';
+        });
+    </script>
+</body>
+</html>
