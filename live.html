@@ -16,13 +16,11 @@
             background: #EFF3F6;
             width: 100vw;
             height: 100vh;
-            overflow: hidden;
             position: relative;
         }
 
         .container {
             width: 100vw;
-            height: 100vh;
             display: flex;
             flex-direction: column;
             background: #EFF3F6;
@@ -68,9 +66,9 @@
         .search-container {
             position: absolute;
             left: 42px;
-            top: 196px;
+            top: 216px;
             width: 547px;
-            height: 64px;
+            height: 44px;
             font-size: 55px;
             background: #FFFFFF;
             border-radius: 32px;
@@ -93,7 +91,7 @@
             flex: 1;
             border: none;
             outline: none;
-            font-size: 30px;
+            font-size: 20px;
             color: rgba(26, 26, 26, 0.6);
             background: transparent;
             padding: 0 10px;
@@ -107,10 +105,11 @@
         .sort-container {
             position: absolute;
             right: 42px;
-            top: 210px;
+            top: 180px;
             display: flex;
             align-items: center;
             gap: 8px;
+            margin-top: -10px;
         }
 
         .sort-text {
@@ -119,6 +118,7 @@
         }
 
         .sort-icon {
+            margin-top: 10px;
             width: 32px;
             height: 32px;
             opacity: 0.6;
@@ -139,7 +139,7 @@
         /* 视频元素 */
         .video-player {
             width: 100%;
-            height: 100%;
+            height: 70vh;
             object-fit: cover;
             background: #000;
         }
@@ -213,6 +213,7 @@
             z-index: 12;
         }
 
+        /* 修改弹幕样式 - 改为向上飘动 */
         .danmu-item {
             position: absolute;
             background: rgba(184, 27, 164, 0.6);
@@ -224,27 +225,23 @@
             line-height: 1.4;
             max-width: 260px;
             white-space: nowrap;
-            animation: danmuMove 8s linear infinite;
+            left: 40px; /* 固定在左侧 */
+            bottom: 150px; /* 从底部开始 */
+            animation: danmuFloat 3s ease-out forwards;
         }
 
-        .danmu-item:nth-child(2) {
-            background: rgba(132, 40, 120, 0.6);
-            opacity: 0.6;
-            animation-delay: -2s;
-        }
-
-        .danmu-item:nth-child(3) {
-            background: rgba(132, 40, 120, 0.6);
-            opacity: 0.5;
-            animation-delay: -4s;
-        }
-
-        @keyframes danmuMove {
+        /* 新的向上飘动动画 */
+        @keyframes danmuFloat {
             0% {
-                transform: translateX(100vw);
+                transform: translateY(0);
+                opacity: 1;
+            }
+            70% {
+                opacity: 1;
             }
             100% {
-                transform: translateX(-100%);
+                transform: translateY(-20vh);
+                opacity: 0;
             }
         }
 
@@ -273,7 +270,6 @@
         .danmu-btn:hover {
             transform: scale(1.1);
         }
-
 
         /* 播放/暂停按钮 */
         .play-pause-btn {
@@ -452,7 +448,7 @@
             }
 
             .sort-text {
-                font-size: 24px;
+                font-size: 20px;
             }
 
             .video-container {
@@ -463,6 +459,7 @@
             .danmu-item {
                 font-size: 18px;
                 max-width: 200px;
+                left: 20px; /* 移动端调整左边距 */
             }
 
             .danmu-btn {
@@ -576,9 +573,125 @@
                 
                 <!-- 弹幕容器 -->
                 <div class="danmu-container" id="danmuContainer">
-                    <div class="danmu-item" style="top: 30%; animation-delay: 0s;">我爱哥哥这版！！！</div>
-                    <div class="danmu-item" style="top: 50%; animation-delay: -2s;">哥哥好帅啊！！！</div>
-                    <div class="danmu-item" style="top: 70%; animation-delay: -4s;">wow很惊讶耶，好听！</div>
+                    <!-- 初始弹幕会在JS中动态创建 -->
+                </div>
+                
+                <!-- 弹幕按钮 -->
+                <button class="danmu-btn" onclick="showDanmuInput()">弹</button>
+                
+                <!-- 进度条 -->
+                <div class="progress-container" onclick="seekVideo(event)">
+                    <div class="progress-bg">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
+                </div>
+                
+                <!-- 底部控制栏 -->
+                <div class="bottom-controls">
+                    <div class="user-info">
+                        <div class="user-avatar">旺</div>
+                        <span class="username">旺仔小馒头</span>
+                    </div>
+                    
+                    <div class="control-buttons">
+                        <button class="control-btn" onclick="toggleLike()" id="likeBtn">♡</button>
+                        <button class="control-btn" onclick="toggleMute()" id="muteBtn">🔇</button>
+                        <button class="control-btn" onclick="showMore()">⋯</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 视频容器 -->
+        <div class="video-container">
+            <!-- 视频元素 -->
+            <video 
+                id="videoPlayer" 
+                class="video-player" 
+                autoplay 
+                muted 
+                loop 
+                playsinline
+                preload="auto"
+                poster=""
+            >
+                <!-- 添加您的视频源 -->
+                <source src="wsl1.mp4" type="video/mp4">
+                <source src="wsl1.webm" type="video/webm">
+                <!-- 如果没有视频文件，可以使用示例视频 -->
+                <source src="https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_1mb.mp4" type="video/mp4">
+                您的浏览器不支持视频播放。
+            </video>
+
+           
+
+            <!-- 视频覆盖层 -->
+            <div class="video-overlay">
+                <!-- 播放/暂停按钮 -->
+                <button class="play-pause-btn" id="playPauseBtn" onclick="togglePlayPause()">⏸</button>
+                
+                <!-- 弹幕容器 -->
+                <div class="danmu-container" id="danmuContainer">
+                    <!-- 初始弹幕会在JS中动态创建 -->
+                </div>
+                
+                <!-- 弹幕按钮 -->
+                <button class="danmu-btn" onclick="showDanmuInput()">弹</button>
+                
+                <!-- 进度条 -->
+                <div class="progress-container" onclick="seekVideo(event)">
+                    <div class="progress-bg">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
+                </div>
+                
+                <!-- 底部控制栏 -->
+                <div class="bottom-controls">
+                    <div class="user-info">
+                        <div class="user-avatar">旺</div>
+                        <span class="username">旺仔小馒头</span>
+                    </div>
+                    
+                    <div class="control-buttons">
+                        <button class="control-btn" onclick="toggleLike()" id="likeBtn">♡</button>
+                        <button class="control-btn" onclick="toggleMute()" id="muteBtn">🔇</button>
+                        <button class="control-btn" onclick="showMore()">⋯</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 视频容器 -->
+        <div class="video-container">
+            <!-- 视频元素 -->
+            <video 
+                id="videoPlayer" 
+                class="video-player" 
+                autoplay 
+                muted 
+                loop 
+                playsinline
+                preload="auto"
+                poster=""
+            >
+                <!-- 添加您的视频源 -->
+                <source src="wsl2.mp4" type="video/mp4">
+                <source src="wsl2.webm" type="video/webm">
+                <!-- 如果没有视频文件，可以使用示例视频 -->
+                <source src="https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_1mb.mp4" type="video/mp4">
+                您的浏览器不支持视频播放。
+            </video>
+
+           
+
+            <!-- 视频覆盖层 -->
+            <div class="video-overlay">
+                <!-- 播放/暂停按钮 -->
+                <button class="play-pause-btn" id="playPauseBtn" onclick="togglePlayPause()">⏸</button>
+                
+                <!-- 弹幕容器 -->
+                <div class="danmu-container" id="danmuContainer">
+                    <!-- 初始弹幕会在JS中动态创建 -->
                 </div>
                 
                 <!-- 弹幕按钮 -->
@@ -637,6 +750,12 @@
             initVideo();
             startAutoDanmu();
             addTouchEvents();
+            // 创建初始弹幕
+            setTimeout(() => {
+                createDanmu('我爱哥哥这版！！！', true);
+                setTimeout(() => createDanmu('哥哥好帅啊！！！', true), 500);
+                setTimeout(() => createDanmu('wow很惊讶耶，好听！', true), 1000);
+            }, 1000);
         });
 
         // 初始化视频
@@ -789,21 +908,25 @@
             }
         }
 
-        // 创建弹幕
+        // 创建弹幕 - 修改为向上飘动
         function createDanmu(text, isAuto = false) {
             const container = document.getElementById('danmuContainer');
             const danmu = document.createElement('div');
             danmu.className = 'danmu-item';
             danmu.textContent = text;
             
-            // 随机位置和颜色
-            const randomTop = Math.random() * 60 + 20; // 20% - 80%
+            // 随机颜色
             const randomColor = danmuColors[Math.floor(Math.random() * danmuColors.length)];
-            const randomDelay = Math.random() * 2;
-            
-            danmu.style.top = randomTop + '%';
             danmu.style.background = randomColor;
-            danmu.style.animationDelay = -randomDelay + 's';
+            
+            // 随机延迟，让弹幕错开显示
+            const randomDelay =  0.5;
+            danmu.style.animationDelay = randomDelay + 's';
+            
+            // 随机左边距，在左下角一定范围内
+            const randomLeft = 20; // 20px - 120px
+            danmu.style.left = randomLeft + 'px';
+            danmu.style.marginBottom= '-40px';
             
             if (!isAuto) {
                 danmu.style.background = 'rgba(255, 20, 147, 0.8)'; // 用户发送的弹幕用特殊颜色
@@ -811,12 +934,12 @@
             
             container.appendChild(danmu);
             
-            // 8秒后移除弹幕
+            // 3秒后移除弹幕（动画时长）
             setTimeout(() => {
                 if (danmu.parentNode) {
                     danmu.remove();
                 }
-            }, 8000);
+            }, 3500);
         }
 
         // 自动弹幕
@@ -831,13 +954,38 @@
                 '声音太好听了',
                 '现场版更好听',
                 '循环播放中',
-                '永远支持你'
+                '永远支持你',
+                '泷泷我爱你！',
+    '现场太绝了！',
+    '新歌循环爆！',
+    '哥哥最棒啊！',
+    '唱进心里了！',
+    '永远支持泷！',
+    '才华横溢啊！',
+    '今晚好感动！',
+    '为你扛大旗！',
+    '宇宙第一帅！',
+    '心跳加速了！', '为你打call！', '泷哥杀疯了！', '耳朵怀孕啦！',
+    '今生只追你！', '舞台王者啊！', '歌词写进魂！', '安可不停！',
+    '神仙转音绝！', '照亮我青春！', '应援色超美！', '宝藏男孩呀！',
+    '追光者本人！', '温柔暴击！', '永远不变心！', '入股不亏！',
+    '签名照求！', '绝美高音！', '彩虹屁预备！', '泪目了呜呜',
+    '首首都经典！', '情歌天花板！', '男友力max！', '全开麦超稳！',
+    '新专买爆！', '宇宙最耀眼！', '甜度超标了！', '镜头感绝！',
+    '心跳节拍器！', '为你摘星星！', '守护一辈子！', '神仙live啊',
+    '行走CD机！', '新歌循环！', '笑容治愈！', '坑底躺平！',
+    '入股不亏！', '手幅摇起来！', '戒指灯海美！', '教科书级！',
+    '饭随爱豆！', '神仙和声！', '为你扛大旗！', '银河系最亮！',
+    '清唱更绝！', '氧气般存在！', '此生无悔！', '甜嗓暴击！',
+    '初心不变！', '命都给你！'
             ];
+
+
 
             setInterval(() => {
                 const randomText = autoDanmuTexts[Math.floor(Math.random() * autoDanmuTexts.length)];
                 createDanmu(randomText, true);
-            }, 3000 + Math.random() * 2000); // 3-5秒随机间隔
+            }, 900 ); // 2-3.5秒随机间隔
         }
 
         // 切换点赞
@@ -941,11 +1089,6 @@
                 togglePlayPause();
             }
         });
-
-        // 防止页面滚动
-        document.addEventListener('touchmove', (e) => {
-            e.preventDefault();
-        }, { passive: false });
 
         // 页面可见性变化时暂停/恢复视频
         document.addEventListener('visibilitychange', () => {

@@ -5,6 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>汪苏泷十万伏特-专属歌单</title>
     <style>
+        .title {
+            text-align: left !important;
+            margin-left: 10 !important;
+            font-size: 23px !important;
+        }
+    </style>
+    <style>
         * {
             margin: 0;
             padding: 0;
@@ -29,6 +36,20 @@
             position: relative;
         }
 
+        .container::after {
+            content: '';
+            position: absolute;
+            top: 480px;
+            left: -100px;
+            right: 0;
+            bottom: 0;
+            background: url('./background.png') center center/cover no-repeat;
+            filter: blur(1px);
+            opacity: 0.3;
+            z-index: -1;
+            pointer-events: none;
+        }
+
         .mid-image {
             width: 100%;
             margin-top: 20px;
@@ -38,27 +59,48 @@
 
         .top-image {
             width: 120%;
-    margin-top: -20px;
-    margin-left: -20px;
+            margin-top: -20px;
+            margin-left: -20px;
+            mask: linear-gradient(to bottom, 
+                rgba(0,0,0,1) 0%, 
+                rgba(0,0,0,1) 80%, 
+                rgba(0,0,0,0) 100%);
+            -webkit-mask: linear-gradient(to bottom, 
+                rgba(0,0,0,1) 0%, 
+                rgba(0,0,0,1) 80%, 
+                rgba(0,0,0,0) 100%);
         }
 
         /* 顶部信息 */
         .header {
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
             align-items: center;
             margin-top: 20px;
             margin-bottom: 30px;
+            position: relative;
         }
 
         .back-btn {
             width: 40px;
             height: 40px;
-            background: rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
+            background-image: url('./arrow.png');
+            background-size: 28px 28px;
+            background-position: center;
+            background-repeat: no-repeat;
             display: flex;
             align-items: center;
             justify-content: center;
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 100;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .back-btn:hover {
+            transform: scale(1.1);
         }
 
         .title {
@@ -66,17 +108,22 @@
             font-weight: 600;
             text-align: center;
             flex: 1;
-            margin: 0 20px;
         }
 
         .favorite-btn {
             width: 40px;
             height: 40px;
-            background: rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
+            background-image: url('./collect.png');
+            background-size: 28px 28px;
+            background-position: center;
+            background-repeat: no-repeat;
             display: flex;
             align-items: center;
             justify-content: center;
+            position: absolute;
+            right: 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
         }
 
         /* 歌单信息 */
@@ -137,6 +184,8 @@
             justify-content: space-between;
             gap: 20px;
             margin: 20px 0;
+            position: relative;
+            z-index: 1;
         }
 
         .play-btn, .preview-btn {
@@ -166,6 +215,8 @@
             justify-content: space-between;
             align-items: center;
             margin: 20px 0;
+            position: relative;
+            z-index: 1;
         }
 
         .song-count {
@@ -189,15 +240,19 @@
             font-size: 22px;
             font-weight: 600;
             margin: 30px 0 20px;
+            position: relative;
+            z-index: 1;
         }
 
         /* 歌曲列表卡片 */
         .songs-card {
-            background: rgba(255, 255, 255, 0.7);
+            background: rgba(255, 255, 255, 0.8);
             border-radius: 22px;
             padding: 25px;
             backdrop-filter: blur(20px);
             margin-bottom: 30px;
+            position: relative;
+            z-index: 1;
         }
 
         /* 歌曲项 */
@@ -332,7 +387,7 @@
             width: 24px;
             height: 24px;
             border-radius: 50%;
-            background: #ddd;
+            background: url('./user_avatar.png') center center/cover no-repeat;
             margin-right: 8px;
         }
 
@@ -355,11 +410,13 @@
         }
 
         .vote-section {
-            background: rgba(255, 255, 255, 0.7);
+            background: rgba(255, 255, 255, 0.8);
             border-radius: 22px;
             padding: 25px;
             backdrop-filter: blur(20px);
             margin-bottom: 30px;
+            position: relative;
+            z-index: 1;
         }
 
         .mystery-tip {
@@ -419,7 +476,7 @@
             }
             
             .title {
-                font-size: 20px;
+                font-size: 26px;
             }
             
             .section-title {
@@ -438,29 +495,34 @@
 </head>
 <body>
     <div class="container">
+        <!-- 返回按钮移动到页面左上角 -->
+        <div class="back-btn"></div>
+        
         <!-- 顶部图片，点击跳转到planet.html页面 -->
         <img src="https://aka.wesingcdn.com/b/assets/8f95ca2d422da5daf8ad8136d6ea6610.png" alt="顶部图片" class="top-image" style="cursor:pointer;" onclick="window.location.href='planet.html'">
         
         <!-- 顶部信息 -->
         <div class="header">
-            <div class="back-btn">←</div>
             <div class="title">汪苏泷十万伏特-专属歌单</div>
-            <div class="favorite-btn">♡</div>
+            <div class="favorite-btn"></div>
         </div>
 
         <!-- 歌单信息 -->
         <div class="playlist-info">
             <div class="power-title">热度助力</div>
-            <div class="power-bar"></div>
-            <div class="power-dots">
-                <div class="dot"></div>
-                <div class="dot"></div>
-                <div class="dot"></div>
-                <div class="dot"></div>
+            <div class="power-bar" style="position: relative; height: 5px; margin-bottom: 14px; background: linear-gradient(90deg, #FF2B9B 0%, #FFF3FC 100%);">
+                <!-- 助力值放在进度条右上角 -->
+                <div class="power-value" style="position: absolute; top: -22px; right: 0; font-size: 14px; color: #606060; font-weight: 300; margin-bottom: 0;">20w+助力值</div>
+                <!-- 四个dot定位在进度条上，位置与mid-image四个发光点对齐，尺寸调小 -->
+                <div class="dot" style="position: absolute; top: 50%; left: 25%; transform: translate(-50%, -50%); width: 9px; height: 9px; border-width: 1.5px;"></div>
+                <div class="dot" style="position: absolute; top: 50%; left: 40%; transform: translate(-50%, -50%); width: 9px; height: 9px; border-width: 1.5px;"></div>
+                <!-- 在第二个和第三个圆点之间插入缩小的闪电图标 -->
+                <img src="./lightning.svg" alt="闪电" style="position: absolute; top: 90%; left: 50%; transform: translate(-50%, -60%); width: 25px; height: 25px; z-index: 2;">
+                <div class="dot" style="position: absolute; top: 50%; left: 63%; transform: translate(-50%, -50%); width: 9px; height: 9px; border-width: 1.5px;"></div>
+                <div class="dot" style="position: absolute; top: 50%; left: 83%; transform: translate(-50%, -50%); width: 9px; height: 9px; border-width: 1.5px;"></div>
             </div>
-            <div class="power-value">20w+助力值</div>
-        <img src="https://aka.wesingcdn.com/b/assets/fa96ab221141bb383029fd7137a18241.png" alt="顶部图片" class="mid-image">
-
+            <!-- 顶部图片往上挪10px，margin-top减少10px -->
+            <img src="https://aka.wesingcdn.com/b/assets/fa96ab221141bb383029fd7137a18241.png" alt="顶部图片" class="mid-image" style="display: block; margin: -10px auto 12px auto; width: 90%; max-width: 320px;">
             <div class="power-desc">全部播放完歌单可为歌单热度助力10份助力值，达到一定助力值可解锁惊喜福利。</div>
         </div>
 
@@ -689,13 +751,16 @@
             // 收藏按钮切换
             const favoriteBtns = document.querySelectorAll('.favorite-btn');
             favoriteBtns.forEach(btn => {
+                let isCollected = false;
                 btn.addEventListener('click', function() {
-                    if (this.innerText === '♡') {
-                        this.innerText = '❤';
-                        this.style.color = '#EB4799';
+                    if (!isCollected) {
+                        this.style.filter = 'brightness(1.2) saturate(1.5)';
+                        this.style.transform = 'scale(1.1)';
+                        isCollected = true;
                     } else {
-                        this.innerText = '♡';
-                        this.style.color = '';
+                        this.style.filter = 'none';
+                        this.style.transform = 'scale(1)';
+                        isCollected = false;
                     }
                 });
             });
