@@ -2,40 +2,959 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Live瞬间</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>LIVE 瞬间 - 汪苏泷专属星球</title>
     <style>
-        body {
+        * {
             margin: 0;
             padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-            background: linear-gradient(180deg, #CE5B9C 0%, #EEC0DA 24.2%, #F5D7E9 66%, #FCEEF7 100%);
-            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'PingFang SC', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #EFF3F6;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .container {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background: #EFF3F6;
+        }
+
+        /* 顶部导航栏 */
+        .header {
+            width: 100%;
+            height: 184px;
+            background: #EFF3F6;
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .back-btn {
+            position: absolute;
+            left: 35px;
+            top: 88px;
+            width: 93px;
+            height: 93px;
+            background: none;
+            border: none;
+            cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
+            font-size: 24px;
+            color: #000;
         }
-        
-        .live-container {
-            text-align: center;
-            background: rgba(255, 255, 255, 0.8);
-            padding: 40px;
-            border-radius: 20px;
-            backdrop-filter: blur(20px);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-        }
-        
-        .live-title {
-            font-size: 36px;
+
+        .page-title {
+            position: absolute;
+            left: 50%;
+            top: 115px;
+            transform: translateX(-50%);
+            font-size: 32px;
             font-weight: 700;
-            color: #1C1C1C;
-            margin: 0;
+            color: #000000;
+            line-height: 37.5px;
+        }
+
+        /* 搜索栏 */
+        .search-container {
+            position: absolute;
+            left: 42px;
+            top: 196px;
+            width: 547px;
+            height: 64px;
+            font-size: 55px;
+            background: #FFFFFF;
+            border-radius: 32px;
+            display: flex;
+            align-items: center;
+            padding: 2px;
+        }
+
+        .search-icon {
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: #666;
+        }
+
+        .search-input {
+            flex: 1;
+            border: none;
+            outline: none;
+            font-size: 30px;
+            color: rgba(26, 26, 26, 0.6);
+            background: transparent;
+            padding: 0 10px;
+        }
+
+        .search-input::placeholder {
+            color: rgba(26, 26, 26, 0.6);
+        }
+
+        /* 热度排序 */
+        .sort-container {
+            position: absolute;
+            right: 42px;
+            top: 210px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .sort-text {
+            font-size: 30px;
+            color: #000000;
+        }
+
+        .sort-icon {
+            width: 32px;
+            height: 32px;
+            opacity: 0.6;
+            cursor: pointer;
+        }
+
+        /* 视频容器 */
+        .video-container {
+            flex: 1;
+            position: relative;
+            margin: 40px;
+            margin-top: 119px;
+            border-radius: 24px;
+            overflow: hidden;
+            background: #000;
+        }
+
+        /* 视频元素 */
+        .video-player {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            background: #000;
+        }
+
+        .video-background {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #E82192 0%, #d01a85 100%);
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+        }
+
+        .video-background.hidden {
+            display: none;
+        }
+
+        /* 视频覆盖层 */
+        .video-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        /* 进度条 */
+        .progress-container {
+            position: absolute;
+            bottom: 60px;
+            left: 25px;
+            right: 25px;
+            height: 10px;
+            z-index: 15;
+        }
+
+        .progress-bg {
+            width: 100%;
+            height: 10px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 10.5px;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .progress-fill {
+            width: 0%;
+            height: 10px;
+            background: linear-gradient(270deg, #FD72FF 0%, #6D026F 100%);
+            border-radius: 10.5px;
+            transition: width 0.1s ease;
+        }
+
+        /* 弹幕区域 */
+        .danmu-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 12;
+        }
+
+        .danmu-item {
+            position: absolute;
+            background: rgba(184, 27, 164, 0.6);
+            backdrop-filter: blur(20px);
+            border-radius: 13px 13px 13px 0;
+            padding: 8px 15px;
+            color: #FFFFFF;
+            font-size: 24px;
+            line-height: 1.4;
+            max-width: 260px;
+            white-space: nowrap;
+            animation: danmuMove 8s linear infinite;
+        }
+
+        .danmu-item:nth-child(2) {
+            background: rgba(132, 40, 120, 0.6);
+            opacity: 0.6;
+            animation-delay: -2s;
+        }
+
+        .danmu-item:nth-child(3) {
+            background: rgba(132, 40, 120, 0.6);
+            opacity: 0.5;
+            animation-delay: -4s;
+        }
+
+        @keyframes danmuMove {
+            0% {
+                transform: translateX(100vw);
+            }
+            100% {
+                transform: translateX(-100%);
+            }
+        }
+
+        /* 弹幕按钮 */
+        .danmu-btn {
+            position: absolute;
+            bottom: 120px;
+            right: 40px;
+            width: 107px;
+            height: 107px;
+            background: #E82192;
+            border: none;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 16px rgba(232, 33, 146, 0.4);
+            transition: transform 0.3s;
+            pointer-events: auto;
+            z-index: 15;
+            font-size: 24px;
+            color: white;
+        }
+
+        .danmu-btn:hover {
+            transform: scale(1.1);
+        }
+
+
+        /* 播放/暂停按钮 */
+        .play-pause-btn {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80px;
+            height: 80px;
+            background: rgba(0, 0, 0, 0.5);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 30px;
+            cursor: pointer;
+            z-index: 15;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: auto;
+        }
+
+        .play-pause-btn.show {
+            opacity: 1;
+        }
+
+        /* 底部控制栏 */
+        .bottom-controls {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 120px;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 40px;
+            z-index: 15;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #E82192, #d01a85);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .username {
+            font-size: 30px;
+            color: #FFFFFF;
+        }
+
+        .control-buttons {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .control-btn {
+            width: 60px;
+            height: 60px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: #FFFFFF;
+            opacity: 0.8;
+            transition: opacity 0.3s;
+        }
+
+        .control-btn:hover {
+            opacity: 1;
+        }
+
+        /* 弹幕输入框 */
+        .danmu-input-container {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+        }
+
+        .danmu-input-container.show {
+            transform: translateY(0);
+        }
+
+        .danmu-input-wrapper {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .danmu-input {
+            flex: 1;
+            padding: 12px 16px;
+            border: none;
+            border-radius: 25px;
+            background: rgba(255, 255, 255, 0.9);
+            font-size: 16px;
+            outline: none;
+        }
+
+        .send-btn {
+            padding: 12px 20px;
+            background: #E82192;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .send-btn:hover {
+            background: #d01a85;
+        }
+
+        .close-input-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .header {
+                height: 140px;
+            }
+
+            .back-btn {
+                top: 60px;
+                width: 60px;
+                height: 60px;
+                left: 20px;
+            }
+
+            .page-title {
+                top: 80px;
+                font-size: 24px;
+            }
+
+            .search-container {
+                top: 150px;
+                left: 20px;
+                width: calc(100vw - 140px);
+            }
+
+            .sort-container {
+                right: 20px;
+                top: 160px;
+            }
+
+            .sort-text {
+                font-size: 24px;
+            }
+
+            .video-container {
+                margin: 20px;
+                margin-top: 80px;
+            }
+
+            .danmu-item {
+                font-size: 18px;
+                max-width: 200px;
+            }
+
+            .danmu-btn {
+                width: 80px;
+                height: 80px;
+                bottom: 100px;
+                right: 20px;
+            }
+
+            .danmu-btn::before {
+                font-size: 24px;
+            }
+
+            .play-pause-btn {
+                width: 60px;
+                height: 60px;
+                font-size: 24px;
+            }
+
+            .bottom-controls {
+                height: 100px;
+                padding: 0 20px;
+            }
+
+            .username {
+                font-size: 24px;
+            }
+
+            .user-avatar {
+                width: 40px;
+                height: 40px;
+                font-size: 16px;
+            }
+
+            .control-btn {
+                width: 50px;
+                height: 50px;
+                font-size: 20px;
+            }
+        }
+
+        /* 加载动画 */
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes likeFloat {
+            0% {
+                transform: scale(1) translateY(0);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1.5) translateY(-100px);
+                opacity: 0;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="live-container">
-        <h1 class="live-title">live瞬间</h1>
+    <div class="container">
+        <!-- 顶部导航栏 -->
+        <div class="header">
+            <button class="back-btn" onclick="goBack()">←</button>
+            <h1 class="page-title">LIVE 瞬间</h1>
+            
+            <!-- 搜索栏 -->
+            <div class="search-container">
+                <div class="search-icon">🔍</div>
+                <input type="text" class="search-input" placeholder="十万伏特现场" readonly>
+            </div>
+            
+            <!-- 热度排序 -->
+            <div class="sort-container">
+                <span class="sort-text">热度</span>
+                <div class="sort-icon" onclick="toggleSort()">⇅</div>
+            </div>
+        </div>
+
+        <!-- 视频容器 -->
+        <div class="video-container">
+            <!-- 视频元素 -->
+            <video 
+                id="videoPlayer" 
+                class="video-player" 
+                autoplay 
+                muted 
+                loop 
+                playsinline
+                preload="auto"
+                poster=""
+            >
+                <!-- 添加您的视频源 -->
+                <source src="wsl.mp4" type="video/mp4">
+                <source src="wsl.webm" type="video/webm">
+                <!-- 如果没有视频文件，可以使用示例视频 -->
+                <source src="https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_1mb.mp4" type="video/mp4">
+                您的浏览器不支持视频播放。
+            </video>
+
+            <!-- 备用背景（视频加载失败时显示） -->
+            <div class="video-background" id="videoBackground">
+                正在加载视频...
+            </div>
+
+            <!-- 视频覆盖层 -->
+            <div class="video-overlay">
+                <!-- 播放/暂停按钮 -->
+                <button class="play-pause-btn" id="playPauseBtn" onclick="togglePlayPause()">⏸</button>
+                
+                <!-- 弹幕容器 -->
+                <div class="danmu-container" id="danmuContainer">
+                    <div class="danmu-item" style="top: 30%; animation-delay: 0s;">我爱哥哥这版！！！</div>
+                    <div class="danmu-item" style="top: 50%; animation-delay: -2s;">哥哥好帅啊！！！</div>
+                    <div class="danmu-item" style="top: 70%; animation-delay: -4s;">wow很惊讶耶，好听！</div>
+                </div>
+                
+                <!-- 弹幕按钮 -->
+                <button class="danmu-btn" onclick="showDanmuInput()">弹</button>
+                
+                <!-- 进度条 -->
+                <div class="progress-container" onclick="seekVideo(event)">
+                    <div class="progress-bg">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
+                </div>
+                
+                <!-- 底部控制栏 -->
+                <div class="bottom-controls">
+                    <div class="user-info">
+                        <div class="user-avatar">旺</div>
+                        <span class="username">旺仔小馒头</span>
+                    </div>
+                    
+                    <div class="control-buttons">
+                        <button class="control-btn" onclick="toggleLike()" id="likeBtn">♡</button>
+                        <button class="control-btn" onclick="toggleMute()" id="muteBtn">🔇</button>
+                        <button class="control-btn" onclick="showMore()">⋯</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+
+    <!-- 弹幕输入框 -->
+    <div class="danmu-input-container" id="danmuInputContainer">
+        <div class="danmu-input-wrapper">
+            <button class="close-input-btn" onclick="hideDanmuInput()">×</button>
+            <input type="text" class="danmu-input" id="danmuInput" placeholder="发个弹幕吧..." maxlength="50">
+            <button class="send-btn" onclick="sendDanmu()">发送</button>
+        </div>
+    </div>
+
+    <script>
+        // 全局变量
+        let video = null;
+        let isLiked = false;
+        let isMuted = true;
+        let controlsTimeout = null;
+        let danmuColors = [
+            'rgba(184, 27, 164, 0.6)',
+            'rgba(132, 40, 120, 0.6)',
+            'rgba(255, 105, 180, 0.6)',
+            'rgba(138, 43, 226, 0.6)',
+            'rgba(75, 0, 130, 0.6)'
+        ];
+
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            video = document.getElementById('videoPlayer');
+            initVideo();
+            startAutoDanmu();
+            addTouchEvents();
+        });
+
+        // 初始化视频
+        function initVideo() {
+            const videoBackground = document.getElementById('videoBackground');
+            
+            // 视频加载成功
+            video.addEventListener('loadeddata', function() {
+                videoBackground.classList.add('hidden');
+                updateProgress();
+            });
+
+            // 视频加载失败
+            video.addEventListener('error', function() {
+                videoBackground.innerHTML = '视频加载失败，显示默认背景';
+                console.log('视频加载失败');
+            });
+
+            // 视频播放时更新进度条
+            video.addEventListener('timeupdate', updateProgress);
+
+            // 视频播放状态变化
+            video.addEventListener('play', function() {
+                document.getElementById('playPauseBtn').textContent = '⏸';
+                hideControls();
+            });
+
+            video.addEventListener('pause', function() {
+                document.getElementById('playPauseBtn').textContent = '▶';
+                showControls();
+            });
+
+            // 视频结束时重新开始（虽然设置了loop，但作为备用）
+            video.addEventListener('ended', function() {
+                video.currentTime = 0;
+                video.play();
+            });
+
+            // 点击视频区域显示/隐藏控制按钮
+            video.addEventListener('click', function() {
+                toggleControls();
+            });
+
+            // 尝试自动播放
+            video.play().catch(function(error) {
+                console.log('自动播放失败:', error);
+                showControls();
+            });
+        }
+
+        // 更新进度条
+        function updateProgress() {
+            if (video.duration) {
+                const progress = (video.currentTime / video.duration) * 100;
+                document.getElementById('progressFill').style.width = progress + '%';
+            }
+        }
+
+        // 播放/暂停切换
+        function togglePlayPause() {
+            if (video.paused) {
+                video.play();
+            } else {
+                video.pause();
+            }
+        }
+
+        // 静音切换
+        function toggleMute() {
+            const muteBtn = document.getElementById('muteBtn');
+            isMuted = !isMuted;
+            video.muted = isMuted;
+            
+            muteBtn.textContent = isMuted ? '🔇' : '🔊';
+        }
+
+        // 进度条点击跳转
+        function seekVideo(event) {
+            const progressContainer = event.currentTarget;
+            const rect = progressContainer.getBoundingClientRect();
+            const clickX = event.clientX - rect.left;
+            const percentage = clickX / rect.width;
+            
+            if (video.duration) {
+                video.currentTime = video.duration * percentage;
+            }
+        }
+
+        // 显示控制按钮
+        function showControls() {
+            const playPauseBtn = document.getElementById('playPauseBtn');
+            playPauseBtn.classList.add('show');
+            
+            clearTimeout(controlsTimeout);
+            controlsTimeout = setTimeout(hideControls, 3000);
+        }
+
+        // 隐藏控制按钮
+        function hideControls() {
+            const playPauseBtn = document.getElementById('playPauseBtn');
+            playPauseBtn.classList.remove('show');
+            clearTimeout(controlsTimeout);
+        }
+
+        // 切换控制按钮显示状态
+        function toggleControls() {
+            const playPauseBtn = document.getElementById('playPauseBtn');
+            if (playPauseBtn.classList.contains('show')) {
+                hideControls();
+            } else {
+                showControls();
+            }
+        }
+
+        // 返回功能
+        function goBack() {
+            alert('返回上一页');
+        }
+
+        // 切换排序
+        function toggleSort() {
+            const sortIcon = document.querySelector('.sort-icon');
+            sortIcon.style.transform = sortIcon.style.transform === 'rotate(180deg)' ? 'rotate(0deg)' : 'rotate(180deg)';
+            alert('切换排序方式');
+        }
+
+        // 显示弹幕输入框
+        function showDanmuInput() {
+            const container = document.getElementById('danmuInputContainer');
+            container.classList.add('show');
+            document.getElementById('danmuInput').focus();
+        }
+
+        // 隐藏弹幕输入框
+        function hideDanmuInput() {
+            const container = document.getElementById('danmuInputContainer');
+            container.classList.remove('show');
+            document.getElementById('danmuInput').value = '';
+        }
+
+        // 发送弹幕
+        function sendDanmu() {
+            const input = document.getElementById('danmuInput');
+            const text = input.value.trim();
+            
+            if (text) {
+                createDanmu(text);
+                input.value = '';
+                hideDanmuInput();
+            }
+        }
+
+        // 创建弹幕
+        function createDanmu(text, isAuto = false) {
+            const container = document.getElementById('danmuContainer');
+            const danmu = document.createElement('div');
+            danmu.className = 'danmu-item';
+            danmu.textContent = text;
+            
+            // 随机位置和颜色
+            const randomTop = Math.random() * 60 + 20; // 20% - 80%
+            const randomColor = danmuColors[Math.floor(Math.random() * danmuColors.length)];
+            const randomDelay = Math.random() * 2;
+            
+            danmu.style.top = randomTop + '%';
+            danmu.style.background = randomColor;
+            danmu.style.animationDelay = -randomDelay + 's';
+            
+            if (!isAuto) {
+                danmu.style.background = 'rgba(255, 20, 147, 0.8)'; // 用户发送的弹幕用特殊颜色
+            }
+            
+            container.appendChild(danmu);
+            
+            // 8秒后移除弹幕
+            setTimeout(() => {
+                if (danmu.parentNode) {
+                    danmu.remove();
+                }
+            }, 8000);
+        }
+
+        // 自动弹幕
+        function startAutoDanmu() {
+            const autoDanmuTexts = [
+                '哥哥太帅了！',
+                '这首歌好好听！',
+                '现场氛围超棒！',
+                '爱你汪苏泷！',
+                '十万伏特！',
+                '专属星球最棒！',
+                '声音太好听了',
+                '现场版更好听',
+                '循环播放中',
+                '永远支持你'
+            ];
+
+            setInterval(() => {
+                const randomText = autoDanmuTexts[Math.floor(Math.random() * autoDanmuTexts.length)];
+                createDanmu(randomText, true);
+            }, 3000 + Math.random() * 2000); // 3-5秒随机间隔
+        }
+
+        // 切换点赞
+        function toggleLike() {
+            const likeBtn = document.getElementById('likeBtn');
+            isLiked = !isLiked;
+            
+            if (isLiked) {
+                likeBtn.textContent = '♥';
+                likeBtn.style.color = '#E82192';
+                likeBtn.style.transform = 'scale(1.2)';
+                createDanmu('❤️ 点赞了！');
+            } else {
+                likeBtn.textContent = '♡';
+                likeBtn.style.color = '#FFFFFF';
+                likeBtn.style.transform = 'scale(1)';
+            }
+            
+            setTimeout(() => {
+                likeBtn.style.transform = 'scale(1)';
+            }, 200);
+        }
+
+        // 显示更多选项
+        function showMore() {
+            alert('更多功能：分享、收藏、举报等');
+        }
+
+        // 添加触摸事件
+        function addTouchEvents() {
+            let startY = 0;
+            let startTime = 0;
+
+            document.addEventListener('touchstart', (e) => {
+                startY = e.touches[0].clientY;
+                startTime = Date.now();
+            });
+
+            document.addEventListener('touchend', (e) => {
+                const endY = e.changedTouches[0].clientY;
+                const endTime = Date.now();
+                const deltaY = startY - endY;
+                const deltaTime = endTime - startTime;
+
+                // 快速上滑切换到下一个视频
+                if (deltaY > 100 && deltaTime < 300) {
+                    video.currentTime = 0;
+                    createDanmu('切换到下一个视频');
+                }
+                
+                // 快速下滑切换到上一个视频
+                if (deltaY < -100 && deltaTime < 300) {
+                    createDanmu('切换到上一个视频');
+                }
+            });
+
+            // 双击点赞
+            let lastTap = 0;
+            document.addEventListener('touchend', (e) => {
+                const currentTime = new Date().getTime();
+                const tapLength = currentTime - lastTap;
+                
+                if (tapLength < 500 && tapLength > 0) {
+                    toggleLike();
+                    createLikeAnimation(e.changedTouches[0].clientX, e.changedTouches[0].clientY);
+                }
+                lastTap = currentTime;
+            });
+        }
+
+        // 创建点赞动画
+        function createLikeAnimation(x, y) {
+            const heart = document.createElement('div');
+            heart.textContent = '♥';
+            heart.style.position = 'fixed';
+            heart.style.left = x + 'px';
+            heart.style.top = y + 'px';
+            heart.style.color = '#E82192';
+            heart.style.fontSize = '30px';
+            heart.style.pointerEvents = 'none';
+            heart.style.zIndex = '9999';
+            heart.style.animation = 'likeFloat 1s ease-out forwards';
+            
+            document.body.appendChild(heart);
+            
+            setTimeout(() => {
+                heart.remove();
+            }, 1000);
+        }
+
+        // 键盘事件
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && document.getElementById('danmuInputContainer').classList.contains('show')) {
+                sendDanmu();
+            }
+            if (e.key === 'Escape') {
+                hideDanmuInput();
+            }
+            if (e.key === ' ') {
+                e.preventDefault();
+                togglePlayPause();
+            }
+        });
+
+        // 防止页面滚动
+        document.addEventListener('touchmove', (e) => {
+            e.preventDefault();
+        }, { passive: false });
+
+        // 页面可见性变化时暂停/恢复视频
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                video.pause();
+            } else {
+                video.play();
+            }
+        });
+    </script>
 </body>
-</html> 
+</html>
